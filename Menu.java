@@ -1,6 +1,6 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
+import java.util.HashMap;
 
 public class Menu extends JFrame {
     static public int popolazione;
@@ -30,7 +30,7 @@ public class Menu extends JFrame {
         parametri.setBackground(Color.GRAY);
 
 
-        JTextField p = new JTextField("0",10);
+        JTextField p = new JTextField("0", 10);
         JTextField r = new JTextField("0", 10);
         JTextField c = new JTextField("0", 10);
         JTextField v = new JTextField("0", 10);
@@ -55,23 +55,15 @@ public class Menu extends JFrame {
         setVisible(true);
 
         start.addActionListener(e -> {
-            new Frame();
-            int n1 = Integer.parseInt(p.getText());
-            System.out.println(n1);
-            int n2 = Integer.parseInt(r.getText());
-            System.out.println(n2);
-            int n3 = Integer.parseInt(c.getText());
-            System.out.println(n3);
-            int n4 = Integer.parseInt(v.getText());
-            System.out.println(n4);
-            int n5 = Integer.parseInt(i.getText());
-            System.out.println(n5);
-            int n6 = Integer.parseInt(s.getText());
-            System.out.println(n6);
-            int n7 = Integer.parseInt(l.getText());
-            System.out.println(n7);
-            int n8 = Integer.parseInt(d.getText());
-            System.out.println(n8);
+            double n1 = Double.parseDouble(p.getText());
+            double n2 = Double.parseDouble(r.getText());
+            double n3 = Double.parseDouble(c.getText());
+            double n4 = Double.parseDouble(v.getText());
+            double n5 = Double.parseDouble(i.getText());
+            double n6 = Double.parseDouble(s.getText());
+            double n7 = Double.parseDouble(l.getText());
+            double n8 = Double.parseDouble(d.getText());
+            new Frame(n1, n2, n3, n4, n5, n6, n7, n8);
         });
     }
 
@@ -83,5 +75,5 @@ public class Menu extends JFrame {
     }
 
     public static void main(String[] args) { new Menu();}
-
+    
 }
