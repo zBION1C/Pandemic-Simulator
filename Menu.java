@@ -3,7 +3,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 
 public class Menu extends JFrame {
-    static private int N_popolazione;
+    static public int popolazione;
 
     public Menu() {
         JFrame menu = new JFrame();
@@ -22,58 +22,64 @@ public class Menu extends JFrame {
         buttonPanel.add(start);                                   // aggiungo bottone al pannello del bottone
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);           //metto il pannelo a sud nel mainPanel
 
-        JPanel textPanel = new JPanel();                          // Text Field numero popolazione
+        JPanel textPanel = new JPanel();                          // Text Field numero p_panel
         BoxLayout layout = new BoxLayout(textPanel, BoxLayout.Y_AXIS);
         textPanel.setLayout(layout);
+        JPanel parametri = new JPanel();
+        parametri.add(new JLabel("PARAMETRI INIZIALI"));
+        parametri.setBackground(Color.GRAY);
 
 
-        JTextField p = new JTextField(10);
-        JTextField r = new JTextField(10);
-        JTextField c = new JTextField(10);
-        JTextField v = new JTextField(10);
-        JTextField i = new JTextField(10);
-        JTextField s = new JTextField(10);
-        JTextField l = new JTextField(10);
-        JTextField d = new JTextField(10);
-        JPanel popolazione = new JPanel();
-        popolazione.add(new JLabel("Popolazione iniziale (P):"));
-        popolazione.add(p);
-        JPanel risorse = new JPanel();
-        risorse.add(new JLabel("Risorse iniziali (R):"));
-        risorse.add(r);
-        JPanel costo = new JPanel();
-        costo.add(new JLabel("Costo delle cure (C):"));
-        costo.add(c);
-        JPanel velocitá = new JPanel();
-        velocitá.add(new JLabel("Velocitá (V):"));
-        velocitá.add(v);
-        JPanel infettivitá = new JPanel();
-        infettivitá.add(new JLabel("Infettivitá (I):"));
-        infettivitá.add(i);
-        JPanel sintomaticitá = new JPanel();
-        sintomaticitá.add(new JLabel("Sintomaticitá (S):"));
-        sintomaticitá.add(s);
-        JPanel letalitá = new JPanel();
-        letalitá.add(new JLabel("Letalitá (L):"));
-        letalitá.add(l);
-        JPanel durata = new JPanel();
-        durata.add(new JLabel("Durata (D):"));
-        durata.add(d);
-        textPanel.add(popolazione);
-        textPanel.add(risorse);
-        textPanel.add(costo);
-        textPanel.add(velocitá);
-        textPanel.add(infettivitá);
-        textPanel.add(sintomaticitá);
-        textPanel.add(letalitá);
-        textPanel.add(durata);
-        mainPanel.add(textPanel, BorderLayout.WEST);
+        JTextField p = new JTextField("0",10);
+        JTextField r = new JTextField("0", 10);
+        JTextField c = new JTextField("0", 10);
+        JTextField v = new JTextField("0", 10);
+        JTextField i = new JTextField("0", 10);
+        JTextField s = new JTextField("0", 10);
+        JTextField l = new JTextField("0", 10);
+        JTextField d = new JTextField("0", 10);
+        textPanel.add(newParameter("Popolazione iniziale (P):", p));
+        textPanel.add(newParameter("Risorse iniziali (R):", r));
+        textPanel.add(newParameter("Costo delle cure (C):", c));
+        textPanel.add(newParameter("Velocitá (V):", v));
+        textPanel.add(newParameter("Infettivitá (I):", i));
+        textPanel.add(newParameter("Sintomaticitá (S):", s));
+        textPanel.add(newParameter("Letalitá (L):", l));
+        textPanel.add(newParameter("Durata (D):", d));
+        mainPanel.add(parametri, BorderLayout.NORTH);
+        mainPanel.add(textPanel, BorderLayout.CENTER);
+        buttonPanel.setBackground(Color.WHITE);
 
 
 
         setVisible(true);
 
-        start.addActionListener(e -> new Frame());
+        start.addActionListener(e -> {
+            new Frame();
+            int n1 = Integer.parseInt(p.getText());
+            System.out.println(n1);
+            int n2 = Integer.parseInt(r.getText());
+            System.out.println(n2);
+            int n3 = Integer.parseInt(c.getText());
+            System.out.println(n3);
+            int n4 = Integer.parseInt(v.getText());
+            System.out.println(n4);
+            int n5 = Integer.parseInt(i.getText());
+            System.out.println(n5);
+            int n6 = Integer.parseInt(s.getText());
+            System.out.println(n6);
+            int n7 = Integer.parseInt(l.getText());
+            System.out.println(n7);
+            int n8 = Integer.parseInt(d.getText());
+            System.out.println(n8);
+        });
+    }
+
+    private JPanel newParameter (String s, JTextField t) {
+        JPanel parametro = new JPanel();
+        parametro.add(new JLabel(s));
+        parametro.add(t);
+        return parametro;
     }
 
     public static void main(String[] args) { new Menu();}
