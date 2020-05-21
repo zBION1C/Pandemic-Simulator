@@ -9,26 +9,22 @@ public class Menu extends JFrame {
         JFrame menu = new JFrame();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Simulatore");
-
         setSize(500, 500);
 
-        //creo il mainPanel
         JPanel mainPanel = new JPanel(new BorderLayout());
         setContentPane(mainPanel);
 
-        //aggiungo il pulsante di start sotto
-        JPanel buttonPanel = new JPanel();                        // pannello del bottone
-        JButton start = new JButton("Start Simulation");     // bottone
-        buttonPanel.add(start);                                   // aggiungo bottone al pannello del bottone
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);           //metto il pannelo a sud nel mainPanel
+        JPanel buttonPanel = new JPanel();
+        JButton start = new JButton("Start Simulation");
+        buttonPanel.add(start);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        JPanel textPanel = new JPanel();                          // Text Field numero p_panel
+        JPanel textPanel = new JPanel();
         BoxLayout layout = new BoxLayout(textPanel, BoxLayout.Y_AXIS);
         textPanel.setLayout(layout);
         JPanel parametri = new JPanel();
         parametri.add(new JLabel("PARAMETRI INIZIALI"));
         parametri.setBackground(Color.GRAY);
-
 
         JTextField p = new JTextField("0", 10);
         JTextField r = new JTextField("0", 10);
@@ -48,7 +44,6 @@ public class Menu extends JFrame {
         textPanel.add(newParameter("Durata (D):", d));
         mainPanel.add(parametri, BorderLayout.NORTH);
         mainPanel.add(textPanel, BorderLayout.CENTER);
-        buttonPanel.setBackground(Color.WHITE);
 
 
 
@@ -64,6 +59,7 @@ public class Menu extends JFrame {
             double n7 = Double.parseDouble(l.getText());
             double n8 = Double.parseDouble(d.getText());
             new Frame(n1, n2, n3, n4, n5, n6, n7, n8);
+            this.dispose();
         });
     }
 
@@ -75,5 +71,5 @@ public class Menu extends JFrame {
     }
 
     public static void main(String[] args) { new Menu();}
-    
+
 }
