@@ -8,8 +8,7 @@ public class Menu extends JFrame {
     public Menu() {
         JFrame menu = new JFrame();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Simulatore");
-
+        setTitle("Menu Parametri Simulazione");
         setSize(500, 500);
 
         //creo il mainPanel
@@ -51,9 +50,6 @@ public class Menu extends JFrame {
         buttonPanel.setBackground(Color.WHITE);
 
 
-
-        setVisible(true);
-
         start.addActionListener(e -> {
             double n1 = Double.parseDouble(p.getText());
             double n2 = Double.parseDouble(r.getText());
@@ -64,8 +60,10 @@ public class Menu extends JFrame {
             double n7 = Double.parseDouble(l.getText());
             double n8 = Double.parseDouble(d.getText());
             new Frame(n1, n2, n3, n4, n5, n6, n7, n8);
-            this.dispose();
+            dispose();
         });
+
+        setVisible(true);
     }
 
     private JPanel newParameter (String s, JTextField t) {
