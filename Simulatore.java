@@ -13,8 +13,9 @@ public class Simulatore extends JPanel {
     int borderY;
     public ArrayList<Persona> listaPopolazione = new ArrayList<Persona>();
     public CollisionChecker collisionChecker;
+    Quarantena quarantena;
 
-    public Simulatore(double p, double r, double c, double v, double i, double s, double l, double d, int borderX, int borderY) {
+    public Simulatore(double p, double r, double c, double v, double i, double s, double l, double d, int borderX, int borderY, Quarantena quarantena) {
         setPreferredSize(new Dimension(borderX,borderY));
         setBorder(new LineBorder(Color.BLACK));
         collisionChecker = new CollisionChecker();
@@ -22,6 +23,7 @@ public class Simulatore extends JPanel {
         this.numeroPopolazione = p; this.r = r; this.c = c; this.v = v; this.i = i; this.s = s; this.l = l; this.d = d;
         this.borderX = borderX;
         this.borderY = borderY;
+        this.quarantena = quarantena;
         generaPopolazione();
         collisionChecker.start();
     }
@@ -29,7 +31,8 @@ public class Simulatore extends JPanel {
     public Timer timer = new Timer(7, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            for (Persona p: listaPopolazione) {
+            for (int i = 0; i < listaPopolazione.size(); i++) {
+                Persona p = listaPopolazione.get(i);
                 if (p.getX()+p.getSize() >= borderX) {
                     p.setVelX(-p.getVelX());
                 }
@@ -72,7 +75,8 @@ public class Simulatore extends JPanel {
     public void paintComponent(Graphics g) { // Stampa le particelle a schermo
         g.setColor(new Color(152, 203, 190));
         g.fillRect(0, 0, borderX, borderY);
-        for (Persona p: listaPopolazione) {
+        for (int i = 0; i < listaPopolazione.size(); i++) {
+            Persona p = listaPopolazione.get(i);
             g.setColor(p.colore);
             g.fillOval(p.getX(), p.getY(), p.getSize(), p.getSize());
         }
@@ -84,12 +88,16 @@ public class Simulatore extends JPanel {
         @Override
         public void run() {
             while (true) {
-                for (Persona p : listaPopolazione) {
-                    for (Persona s : listaPopolazione) {
+                for (int i = 0; i< listaPopolazione.size(); i++) {
+                    Persona p = listaPopolazione.get(i);
+                    for (int y = 0; y < listaPopolazione.size(); y++) {
+                        Persona s = listaPopolazione.get(y);
                         if (p != s && p.colore != Color.BLACK && s.colore != Color.BLACK) {
                             if (p.collideWith(s)) {
                                 p.colore = Color.BLACK;
                                 s.colore = Color.BLACK;
+                                quarantena.putToQuarantine(s);
+                                listaPopolazione.remove(s);
                                 System.out.println(cont++);
                                 while (p.collideWith(s))
                                     ;

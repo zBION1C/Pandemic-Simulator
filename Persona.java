@@ -28,13 +28,19 @@ public class Persona {
     public int getVelY() {return this.velY; }
 
     public void setVelX(int valore) {
-        if (valore != 0)
-            this.velX = valore;
+        this.velX = valore;
     }
 
     public void setVelY(int valore) {
-        if (valore != 0)
-            this.velY = valore;
+        this.velY = valore;
+    }
+
+    public void setX(int valore) {
+        this.x = valore;
+    }
+
+    public void setY(int valore) {
+        this.y = valore;
     }
 
     public double distance(int x1, int y1) {
