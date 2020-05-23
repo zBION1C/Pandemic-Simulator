@@ -6,7 +6,7 @@ public class Persona {
     private int x;
     private int velX = ThreadLocalRandom.current().nextInt(-3, 3);
     private int velY = ThreadLocalRandom.current().nextInt(-3, 3);;
-    static final private int size = 10;
+    static final private int size = 4;
     static final private int radius = size/2;
     public Color colore = Color.RED;
     int maxCollisioni;
