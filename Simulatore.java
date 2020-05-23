@@ -42,15 +42,6 @@ public class Simulatore extends JPanel {
                 if (p.getY() <= 0) {
                     p.setVelY(-p.getVelY());
                 }
-                /*for (Persona s: listaPopolazione) {
-                    if (p != s) {
-                        if (p.collideWith(s)) {
-                            p.colore = Color.BLACK;
-                            s.colore = Color.BLACK;
-                            System.out.println("Collisione avvenuta!");
-                        }
-                    }
-                }*/
                 p.moveX();
                 p.moveY();
             }
@@ -88,21 +79,20 @@ public class Simulatore extends JPanel {
     }
 
     class CollisionChecker extends Thread {
+        int cont;
+
         @Override
         public void run() {
             while (true) {
                 for (Persona p : listaPopolazione) {
                     for (Persona s : listaPopolazione) {
-                        if (p != s) {
+                        if (p != s && p.colore != Color.BLACK && s.colore != Color.BLACK) {
                             if (p.collideWith(s)) {
                                 p.colore = Color.BLACK;
                                 s.colore = Color.BLACK;
-                                System.out.println(p + "Collisione avvenuta!");
-                                try {
-                                    sleep(600);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+                                System.out.println(cont++);
+                                while (p.collideWith(s))
+                                    ;
                             }
                         }
                     }
