@@ -48,19 +48,53 @@ public class Menu extends JFrame {
         start.addActionListener(e -> {
             try {
                 double n1 = Double.parseDouble(p.getText());
-                double n2 = Double.parseDouble(r.getText());
-                double n3 = Double.parseDouble(c.getText());
-                double n4 = Double.parseDouble(v.getText());
-                double n5 = Double.parseDouble(i.getText());
-                double n6 = Double.parseDouble(s.getText());
-                double n7 = Double.parseDouble(l.getText());
-                double n8 = Double.parseDouble(d.getText());
-                new Frame(n1, n2, n3, n4, n5, n6, n7, n8);
-                dispose();
+                try {
+                    double n2 = Double.parseDouble(r.getText());
+                    try {
+                        double n3 = Double.parseDouble(c.getText());
+                        try {
+                            double n4 = Double.parseDouble(v.getText());
+                            try {
+                                double n5 = Double.parseDouble(i.getText());
+                                try {
+                                    double n6 = Double.parseDouble(s.getText());
+                                    try {
+                                        double n7 = Double.parseDouble(l.getText());
+                                        try {
+                                            double n8 = Double.parseDouble(d.getText());
+                                            new Frame(n1, n2, n3, n4, n5, n6, n7, n8);
+                                            dispose();
+                                        }
+                                        catch (NumberFormatException f) {
+                                            d.setBackground(Color.RED);
+                                        }
+                                    }
+                                    catch (NumberFormatException f) {
+                                        l.setBackground(Color.RED);
+                                    }
+                                }
+                                catch (NumberFormatException f) {
+                                    s.setBackground(Color.RED);
+                                }
+                            }
+                            catch (NumberFormatException f) {
+                                i.setBackground(Color.RED);
+                            }
+                        }
+                        catch (NumberFormatException f) {
+                            v.setBackground(Color.RED);
+                        }
+                    }
+                    catch (NumberFormatException f) {
+                        c.setBackground(Color.RED);
+                    }
+                }
+                catch (NumberFormatException f) {
+                    r.setBackground(Color.RED);
+                }
             }
             catch (NumberFormatException f) {
-                System.out.println("Errore: Inserire valori numerici");
-                new ErrorFrame();
+                p.setBackground(Color.RED);
             }
         });
 
