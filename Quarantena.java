@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Quarantena extends JPanel {
 
@@ -16,7 +17,7 @@ public class Quarantena extends JPanel {
         timer.start();
     }
 
-    public Timer timer = new Timer(7, new ActionListener() {
+    public Timer timer = new Timer(40, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             for (int i = 0; i< quarantena.size(); i++) {
@@ -51,10 +52,10 @@ public class Quarantena extends JPanel {
     }
 
     public void putToQuarantine(Persona s) {
-        s.setX(200);
-        s.setY(200);
-        s.setVelX(2);
+        s.setX(ThreadLocalRandom.current().nextInt(220, 380));
+        s.setY(ThreadLocalRandom.current().nextInt(220, 380));
+        s.setVelX(ThreadLocalRandom.current().nextInt(-2,2));
+        s.setVelY(ThreadLocalRandom.current().nextInt(-2,2));
         quarantena.add(s);
-        repaint();
     }
 }

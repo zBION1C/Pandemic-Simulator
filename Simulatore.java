@@ -28,25 +28,27 @@ public class Simulatore extends JPanel {
         collisionChecker.start();
     }
 
-    public Timer timer = new Timer(7, new ActionListener() {
+    public Timer timer = new Timer(20, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             for (int i = 0; i < listaPopolazione.size(); i++) {
                 Persona p = listaPopolazione.get(i);
-                if (p.getX()+p.getSize() >= borderX) {
-                    p.setVelX(-p.getVelX());
+                if (p!= null) {
+                    if (p.getX() + p.getSize() >= borderX) {
+                        p.setVelX(-p.getVelX());
+                    }
+                    if (p.getX() <= 0) {
+                        p.setVelX(-p.getVelX());
+                    }
+                    if (p.getY() + p.getSize() >= borderY) {
+                        p.setVelY(-p.getVelY());
+                    }
+                    if (p.getY() <= 0) {
+                        p.setVelY(-p.getVelY());
+                    }
+                    p.moveX();
+                    p.moveY();
                 }
-                if (p.getX() <= 0) {
-                    p.setVelX(-p.getVelX());
-                }
-                if (p.getY()+p.getSize() >= borderY) {
-                    p.setVelY(-p.getVelY());
-                }
-                if (p.getY() <= 0) {
-                    p.setVelY(-p.getVelY());
-                }
-                p.moveX();
-                p.moveY();
             }
             repaint();
         }
@@ -54,15 +56,15 @@ public class Simulatore extends JPanel {
 
     public void generaPopolazione() {
         for (int i = 0; i < numeroPopolazione; i++) {
-            int x = ThreadLocalRandom.current().nextInt(0, borderX-7);
-            int y = ThreadLocalRandom.current().nextInt(0, borderY-7);
+            int x = ThreadLocalRandom.current().nextInt(0, borderX);
+            int y = ThreadLocalRandom.current().nextInt(0, borderY);
 
             if (i!=0) {
                 for (int j = 0; j < listaPopolazione.size(); j++) {
                     Persona p = listaPopolazione.get(j);
-                    if (p.distance(x, y) - (p.getSize()/2)*2 < 0) {
-                        x = ThreadLocalRandom.current().nextInt(0, borderX-7);
-                        y = ThreadLocalRandom.current().nextInt(0, borderX-7);
+                    if (p.distance(x, y) - (p.getSize()/2)*2 < 0 && x <= 1 || x >= borderX-10 || y <= 1 || y >= borderY-10) {
+                        x = ThreadLocalRandom.current().nextInt(0, borderX);
+                        y = ThreadLocalRandom.current().nextInt(0, borderX);
                     }
                 }
             }
@@ -83,10 +85,10 @@ public class Simulatore extends JPanel {
     }
 
     class CollisionChecker extends Thread {
-        int cont;
+        long cont;
 
         @Override
-        public void run() {
+        public synchronized void run() {
             while (true) {
                 for (int i = 0; i< listaPopolazione.size(); i++) {
                     Persona p = listaPopolazione.get(i);
@@ -94,10 +96,9 @@ public class Simulatore extends JPanel {
                         Persona s = listaPopolazione.get(y);
                         if (p != s && p.colore != Color.BLACK && s.colore != Color.BLACK) {
                             if (p.collideWith(s)) {
-                                p.colore = Color.BLACK;
+                                listaPopolazione.remove(s);
                                 s.colore = Color.BLACK;
                                 quarantena.putToQuarantine(s);
-                                listaPopolazione.remove(s);
                                 System.out.println(cont++);
                                 while (p.collideWith(s))
                                     ;
@@ -108,4 +109,5 @@ public class Simulatore extends JPanel {
             }
         }
     }
+
 }
