@@ -6,9 +6,10 @@ public class ExitFrame extends JFrame {
     public ExitFrame() {
         JFrame frame = new JFrame();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("ExitFrame");
+        setTitle("Uscire?");
         setSize(400, 150);
         setVisible(true);
+        setResizable(false);
 
         JPanel mainPanel = new JPanel(null);
         setContentPane(mainPanel);

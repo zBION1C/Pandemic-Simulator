@@ -45,22 +45,23 @@ public class Menu extends JFrame {
         mainPanel.add(textPanel, BorderLayout.CENTER);
         buttonPanel.setBackground(Color.WHITE);
 
-
-
-        setVisible(true);
-
         start.addActionListener(e -> {
-            double n1 = Double.parseDouble(p.getText());
-            double n2 = Double.parseDouble(r.getText());
-            double n3 = Double.parseDouble(c.getText());
-            double n4 = Double.parseDouble(v.getText());
-            double n5 = Double.parseDouble(i.getText());
-            double n6 = Double.parseDouble(s.getText());
-            double n7 = Double.parseDouble(l.getText());
-            double n8 = Double.parseDouble(d.getText());
-            new Frame(n1, n2, n3, n4, n5, n6, n7, n8);
-            this.dispose();
-            dispose();
+            try {
+                double n1 = Double.parseDouble(p.getText());
+                double n2 = Double.parseDouble(r.getText());
+                double n3 = Double.parseDouble(c.getText());
+                double n4 = Double.parseDouble(v.getText());
+                double n5 = Double.parseDouble(i.getText());
+                double n6 = Double.parseDouble(s.getText());
+                double n7 = Double.parseDouble(l.getText());
+                double n8 = Double.parseDouble(d.getText());
+                new Frame(n1, n2, n3, n4, n5, n6, n7, n8);
+                dispose();
+            }
+            catch (NumberFormatException f) {
+                System.out.println("Errore: Inserire valori numerici");
+                new ErrorFrame();
+            }
         });
 
         setVisible(true);

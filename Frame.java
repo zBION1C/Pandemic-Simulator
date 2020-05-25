@@ -20,15 +20,13 @@ public class Frame extends JFrame {
         rightSidePanel.setLayout(new BorderLayout());
 
         setLayout(new BorderLayout());
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
         Quarantena quarantena = new Quarantena();
         Simulatore simulator = new Simulatore(p, r, c, v, i, s, l, d, borderX, borderY, quarantena);
-        add(simulator, BorderLayout.WEST);
+        add(simulator, BorderLayout.CENTER);
         rightSidePanel.add(quarantena, BorderLayout.NORTH);
         add(rightSidePanel, BorderLayout.EAST);
-        add(simulator, BorderLayout.WEST);
         setVisible(true);
-        setTitle("Simulazione");
+        setTitle("SIMULAZIONE");
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         pack();
         addWindowListener(new WindowAdapter() {
