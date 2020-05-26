@@ -64,4 +64,9 @@ public class Persona {
         this.y += this.velY;
     }
 
+    public void randomizeStatus() {
+        this.velX = ThreadLocalRandom.current().nextInt(-3,3);
+        this.velY = ThreadLocalRandom.current().nextInt(-3,3);
+    }
+
 }

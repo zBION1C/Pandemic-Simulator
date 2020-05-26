@@ -14,12 +14,14 @@ public class Simulatore extends JPanel {
     public ArrayList<Persona> listaPopolazione = new ArrayList<Persona>();
     public CollisionChecker collisionChecker;
     Quarantena quarantena;
+    int giorni;
 
     public Simulatore(double P, double R, double C, int V, double I, double S, double L, double D, int borderX, int borderY, Quarantena quarantena) {
         setPreferredSize(new Dimension(borderX,borderY));
         setBorder(new LineBorder(Color.BLACK));
         collisionChecker = new CollisionChecker();
         timer.start();
+        tempo.start();
         this.P = P; this.R = R; this.C = C; this.V = V; this.I = I; this.S = S; this.L = L; this.D = D;
         this.borderX = borderX;
         this.borderY = borderY;
@@ -28,9 +30,19 @@ public class Simulatore extends JPanel {
         collisionChecker.start();
     }
 
-    public Timer timer = new Timer(20, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
+    public Timer tempo = new Timer(5000, e -> {
+        ++giorni;
+        for (int i = 0; i < listaPopolazione.size(); i++) {
+            Persona p = listaPopolazione.get(i);
+            if (p.getVelX() == 0 && p.getVelY() == 0) {
+                this.R -= 1;
+            }
+            p.randomizeStatus();
+        }
+        System.out.println(this.R);
+    });
+
+    public Timer timer = new Timer(20, e -> {
             for (int i = 0; i < listaPopolazione.size(); i++) {
                 Persona p = listaPopolazione.get(i);
                 if (p!= null) {
@@ -51,8 +63,7 @@ public class Simulatore extends JPanel {
                 }
             }
             repaint();
-        }
-    });
+        });
 
     public void generaPopolazione() {
         for (int i = 0; i < P; i++) {
@@ -97,13 +108,13 @@ public class Simulatore extends JPanel {
                         if (p != s) {
                             if (p.collideWith(s) && p.maxIncontri > 0) {
                                 p.maxIncontri--;
-                                System.out.println(p.maxIncontri);
+                                //System.out.println(p.maxIncontri);
                                 listaPopolazione.remove(s);
                                 s.colore = Color.BLACK;
                                 quarantena.putToQuarantine(s);
-                                System.out.println(cont++);
+                                //System.out.println(cont++);
                                 while (p.collideWith(s))
-                                    System.out.println("diocane");
+                                    ;
                             }
                         }
                     }
