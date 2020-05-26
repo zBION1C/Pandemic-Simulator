@@ -8,19 +8,19 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Simulatore extends JPanel {
-    double numeroPopolazione; double r; double c; double v; double i; double s; double l; double d;
+    double P; double R; double C; int V; double I; double S; double L; double D;
     int borderX;
     int borderY;
     public ArrayList<Persona> listaPopolazione = new ArrayList<Persona>();
     public CollisionChecker collisionChecker;
     Quarantena quarantena;
 
-    public Simulatore(double p, double r, double c, double v, double i, double s, double l, double d, int borderX, int borderY, Quarantena quarantena) {
+    public Simulatore(double P, double R, double C, int V, double I, double S, double L, double D, int borderX, int borderY, Quarantena quarantena) {
         setPreferredSize(new Dimension(borderX,borderY));
         setBorder(new LineBorder(Color.BLACK));
         collisionChecker = new CollisionChecker();
         timer.start();
-        this.numeroPopolazione = p; this.r = r; this.c = c; this.v = v; this.i = i; this.s = s; this.l = l; this.d = d;
+        this.P = P; this.R = R; this.C = C; this.V = V; this.I = I; this.S = S; this.L = L; this.D = D;
         this.borderX = borderX;
         this.borderY = borderY;
         this.quarantena = quarantena;
@@ -55,7 +55,7 @@ public class Simulatore extends JPanel {
     });
 
     public void generaPopolazione() {
-        for (int i = 0; i < numeroPopolazione; i++) {
+        for (int i = 0; i < P; i++) {
             int x = ThreadLocalRandom.current().nextInt(0, borderX);
             int y = ThreadLocalRandom.current().nextInt(0, borderY);
 
@@ -68,19 +68,19 @@ public class Simulatore extends JPanel {
                     }
                 }
             }
-            listaPopolazione.add(new Persona(x, y));
+            listaPopolazione.add(new Persona(x, y, V));
         }
     }
 
 
     // Stampa le particelle a schermo
     public void paintComponent(Graphics g) { // Stampa le particelle a schermo
-        g.setColor(new Color(152, 203, 190));
+        g.setColor(new Color(192, 219, 255));
         g.fillRect(0, 0, borderX, borderY);
         for (int i = 0; i < listaPopolazione.size(); i++) {
             Persona p = listaPopolazione.get(i);
             g.setColor(p.colore);
-            g.fillOval(p.getX(), p.getY(), p.getSize(), p.getSize());
+            g.fillOval(p.getX(), p.getY(), p.size, p.size);
         }
     }
 
@@ -94,14 +94,16 @@ public class Simulatore extends JPanel {
                     Persona p = listaPopolazione.get(i);
                     for (int y = 0; y < listaPopolazione.size(); y++) {
                         Persona s = listaPopolazione.get(y);
-                        if (p != s && p.colore != Color.BLACK && s.colore != Color.BLACK) {
-                            if (p.collideWith(s)) {
+                        if (p != s) {
+                            if (p.collideWith(s) && p.maxIncontri > 0) {
+                                p.maxIncontri--;
+                                System.out.println(p.maxIncontri);
                                 listaPopolazione.remove(s);
                                 s.colore = Color.BLACK;
                                 quarantena.putToQuarantine(s);
                                 System.out.println(cont++);
                                 while (p.collideWith(s))
-                                    ;
+                                    System.out.println("diocane");
                             }
                         }
                     }

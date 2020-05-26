@@ -6,15 +6,15 @@ public class Persona {
     private int x;
     private int velX = ThreadLocalRandom.current().nextInt(-3, 3);
     private int velY = ThreadLocalRandom.current().nextInt(-3, 3);;
-    static final private int size = 4;
-    static final private int radius = size/2;
+    public int size = 4;
+    final private int radius = size/2;
     public Color colore = Color.RED;
-    int maxCollisioni;
+    public int maxIncontri;
 
-
-    public Persona (int x, int y) {
+    public Persona (int x, int y, int V) {
         this.x = x;
         this.y = y;
+        this.maxIncontri = V;
     }
 
     public int getX () { return this.x; }

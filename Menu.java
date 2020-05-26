@@ -1,6 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
+
 public class Menu extends JFrame {
     static public int popolazione;
     public Menu() {
@@ -45,21 +45,16 @@ public class Menu extends JFrame {
         mainPanel.add(textPanel, BorderLayout.CENTER);
         buttonPanel.setBackground(Color.WHITE);
 
-
-
-        setVisible(true);
-
         start.addActionListener(e -> {
             double n1 = Double.parseDouble(p.getText());
             double n2 = Double.parseDouble(r.getText());
             double n3 = Double.parseDouble(c.getText());
-            double n4 = Double.parseDouble(v.getText());
+            int n4 = Integer.parseInt(v.getText());
             double n5 = Double.parseDouble(i.getText());
             double n6 = Double.parseDouble(s.getText());
             double n7 = Double.parseDouble(l.getText());
             double n8 = Double.parseDouble(d.getText());
             new Frame(n1, n2, n3, n4, n5, n6, n7, n8);
-            this.dispose();
             dispose();
         });
 
