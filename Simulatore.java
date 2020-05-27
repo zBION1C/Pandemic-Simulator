@@ -1,9 +1,6 @@
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -19,7 +16,7 @@ public class Simulatore extends JPanel {
     public Simulatore(double P, double R, double C, int V, double I, double S, double L, double D, int borderX, int borderY, Quarantena quarantena) {
         setPreferredSize(new Dimension(borderX,borderY));
         setBorder(new LineBorder(Color.BLACK));
-        collisionChecker = new CollisionChecker();
+        collisionChecker = new CollisionChecker(listaPopolazione, I);
         timer.start();
         tempo.start();
         this.P = P; this.R = R; this.C = C; this.V = V; this.I = I; this.S = S; this.L = L; this.D = D;
@@ -32,12 +29,31 @@ public class Simulatore extends JPanel {
 
     public Timer tempo = new Timer(5000, e -> {
         ++giorni;
+
         for (int i = 0; i < listaPopolazione.size(); i++) {
+            int rand = ThreadLocalRandom.current().nextInt(1,100);
             Persona p = listaPopolazione.get(i);
+
             if (p.getVelX() == 0 && p.getVelY() == 0) {
                 this.R -= 1;
             }
-            p.randomizeStatus();
+
+            if (p.isInfected()){
+                p.giorniTrascorsi++;
+                if (p.giorniTrascorsi >= D/6) {
+                    p.colore = Color.ORANGE;
+                    p.setContagioso(true);
+                }
+                if (p.giorniTrascorsi >= D/3 && rand <= S) {
+                    p.colore = Color.RED;
+                    p.setVelX(0);
+                    p.setVelY(0);
+                }
+            }
+
+            p.maxIncontri = V;
+            if (p.colore != Color.RED)
+                p.randomizeStatus();
         }
         System.out.println(this.R);
     });
@@ -45,6 +61,7 @@ public class Simulatore extends JPanel {
     public Timer timer = new Timer(20, e -> {
             for (int i = 0; i < listaPopolazione.size(); i++) {
                 Persona p = listaPopolazione.get(i);
+
                 if (p!= null) {
                     if (p.getX() + p.getSize() >= borderX) {
                         p.setVelX(-p.getVelX());
@@ -71,9 +88,9 @@ public class Simulatore extends JPanel {
             int y = ThreadLocalRandom.current().nextInt(0, borderY);
 
             if (i!=0) {
-                for (int j = 0; j < listaPopolazione.size(); j++) {
+                for (int j = 1; j < listaPopolazione.size(); j++) {
                     Persona p = listaPopolazione.get(j);
-                    if (p.distance(x, y) - (p.getSize()/2)*2 < 0 && x <= 1 || x >= borderX-10 || y <= 1 || y >= borderY-10) {
+                    if (p.distance(x, y) - (p.getSize() / 2) * 2 < 0 && x <= 10 || x >= borderX - 10 || y <= 10 || y >= borderY - 10) {
                         x = ThreadLocalRandom.current().nextInt(0, borderX);
                         y = ThreadLocalRandom.current().nextInt(0, borderX);
                     }
@@ -81,46 +98,21 @@ public class Simulatore extends JPanel {
             }
             listaPopolazione.add(new Persona(x, y, V));
         }
+        if (listaPopolazione.size() > 0) {
+            listaPopolazione.get(0).colore = Color.ORANGE;
+            listaPopolazione.get(0).infect();
+            listaPopolazione.get(0).setContagioso(true);
+        }
     }
-
 
     // Stampa le particelle a schermo
     public void paintComponent(Graphics g) { // Stampa le particelle a schermo
-        g.setColor(new Color(192, 219, 255));
+        g.setColor(new Color(59, 68, 76));
         g.fillRect(0, 0, borderX, borderY);
         for (int i = 0; i < listaPopolazione.size(); i++) {
             Persona p = listaPopolazione.get(i);
             g.setColor(p.colore);
-            g.fillOval(p.getX(), p.getY(), p.size, p.size);
+            g.fillOval(p.getX(), p.getY(), p.getSize(), p.getSize());
         }
     }
-
-    class CollisionChecker extends Thread {
-        long cont;
-
-        @Override
-        public synchronized void run() {
-            while (true) {
-                for (int i = 0; i< listaPopolazione.size(); i++) {
-                    Persona p = listaPopolazione.get(i);
-                    for (int y = 0; y < listaPopolazione.size(); y++) {
-                        Persona s = listaPopolazione.get(y);
-                        if (p != s) {
-                            if (p.collideWith(s) && p.maxIncontri > 0) {
-                                p.maxIncontri--;
-                                //System.out.println(p.maxIncontri);
-                                listaPopolazione.remove(s);
-                                s.colore = Color.BLACK;
-                                quarantena.putToQuarantine(s);
-                                //System.out.println(cont++);
-                                while (p.collideWith(s))
-                                    ;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
 }

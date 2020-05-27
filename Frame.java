@@ -32,7 +32,8 @@ public class Frame extends JFrame {
             public void windowClosing(WindowEvent e) {
                 simulator.timer.stop();
                 simulator.listaPopolazione.clear();
-                simulator.collisionChecker.stop();
+                simulator.collisionChecker.interrupt();
+                simulator.tempo.stop();
                 exit();
             }
         });
