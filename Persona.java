@@ -10,8 +10,7 @@ public class Persona extends Thread {
     private boolean infected = false;
     private boolean contagioso = false;
     boolean colliding = false;
-
-    public Timer timer = new Timer(200, e -> {this.colliding = false; this.timer.stop();});
+    Persona last;
 
     public Persona(int x, int y, int V) {
         initStatus();
@@ -93,9 +92,7 @@ public class Persona extends Thread {
         }
     }
 
-    public void infect() {
-        this.infected = true;
-    }
+    public void setInfection(boolean valore) { this.infected = valore; }
 
     public boolean isInfected() { return infected; }
 

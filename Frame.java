@@ -16,7 +16,6 @@ public class Frame extends JFrame {
 
         JPanel rightSidePanel = new JPanel();
         rightSidePanel.setLayout(new BorderLayout());
-
         setLayout(new BorderLayout());
         Quarantena quarantena = new Quarantena();
         Simulatore simulator = new Simulatore(P, R, C, V, I, S, L, D, borderX, borderY, quarantena);
@@ -27,13 +26,13 @@ public class Frame extends JFrame {
         setTitle("SIMULAZIONE");
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         pack();
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 simulator.timer.stop();
                 simulator.listaPopolazione.clear();
                 simulator.collisionChecker.interrupt();
-                simulator.tempo.stop();
                 exit();
             }
         });

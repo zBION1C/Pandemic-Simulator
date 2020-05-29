@@ -1,14 +1,17 @@
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 class CollisionChecker extends Thread {
-    int cont = 0;
     ArrayList<Persona> listaPopolazione = new ArrayList<Persona>();
     double I;
+    double incontriGiornata;
 
-    public CollisionChecker(ArrayList<Persona> l, double i) {
+    public CollisionChecker(ArrayList<Persona> l, double i, double V, double P) {
         this.listaPopolazione = l;
         this.I = i;
+        incontriGiornata = V * P;
     }
 
     public int getRandom() {
@@ -17,23 +20,35 @@ class CollisionChecker extends Thread {
 
     @Override
     public void run() {
+        long cont = 0;
         while (true) {
             for (int i = 0; i< listaPopolazione.size(); i++) {
                 Persona p = listaPopolazione.get(i);
                 for (int y = 0; y < listaPopolazione.size(); y++) {
                     Persona s = listaPopolazione.get(y);
-                    if (p != s) {
-                        if (p.collideWith(s) && p.maxIncontri > 0 && !p.isColliding() && !s.isColliding()) {
-                            p.colliding = true;
-                            s.colliding = true;
-                            p.timer.start();
-                            s.timer.start();
-                            p.maxIncontri--;
+                    if (p != s && p.maxIncontri > 0) {
+
+                        if (p.last!=null) {
+                            if (p.collideWith(p.last) && p.colliding) {
+                                p.colliding = true;
+                            } else {
+                                p.colliding = false;
+                            }
+                        }
+
+                        if (p.collideWith(s) && !p.isColliding()) {
                             System.out.println(++cont);
+                            p.colliding = true;
+                            p.last = s;
+                            p.maxIncontri--;
+                            incontriGiornata--;
+
                             int rand = getRandom();
                             if (rand <= I && p.isContagioso() || s.isContagioso()) {
-                                s.infect();
-                                p.infect();
+                                if (p.colore != Color.BLUE && s.colore != Color.BLUE) {
+                                    s.setInfection(true);
+                                    p.setInfection(true);
+                                }
                             }
                             //listaPopolazione.remove(s);
                             //s.colore = Color.BLACK;
