@@ -1,81 +1,138 @@
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Simulatore extends JPanel {
-    double numeroPopolazione; double r; double c; double v; double i; double s; double l; double d;
+    static double P, R, C, I, S, L, D;
+    static int V;
     int borderX;
     int borderY;
     public ArrayList<Persona> listaPopolazione = new ArrayList<Persona>();
     public CollisionChecker collisionChecker;
     Quarantena quarantena;
+    int giorni;
+    Tampone tampone;
 
-    public Simulatore(double p, double r, double c, double v, double i, double s, double l, double d, int borderX, int borderY, Quarantena quarantena) {
-        setPreferredSize(new Dimension(borderX,borderY));
-        setBorder(new LineBorder(Color.BLACK));
-        collisionChecker = new CollisionChecker();
-        timer.start();
-        this.numeroPopolazione = p; this.r = r; this.c = c; this.v = v; this.i = i; this.s = s; this.l = l; this.d = d;
+    public Simulatore(double P, double R, double C, int V, double I, double S, double L, double D, int borderX, int borderY, Quarantena quarantena) {
         this.borderX = borderX;
         this.borderY = borderY;
         this.quarantena = quarantena;
+        this.tampone = new Tampone(C);
+        setPreferredSize(new Dimension(borderX,borderY));
+        setBorder(new LineBorder(Color.BLACK));
+        collisionChecker = new CollisionChecker(listaPopolazione, I, V, P);
+        timer.start();
+        this.P = P; this.R = R; this.C = C; this.V = V; this.I = I; this.S = S; this.L = L; this.D = D;
         generaPopolazione();
         collisionChecker.start();
     }
 
-    public Timer timer = new Timer(20, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            for (int i = 0; i < listaPopolazione.size(); i++) {
-                Persona p = listaPopolazione.get(i);
-                if (p!= null) {
-                    if (p.getX() + p.getSize() >= borderX) {
-                        p.setVelX(-p.getVelX());
-                    }
-                    if (p.getX() <= 0) {
-                        p.setVelX(-p.getVelX());
-                    }
-                    if (p.getY() + p.getSize() >= borderY) {
-                        p.setVelY(-p.getVelY());
-                    }
-                    if (p.getY() <= 0) {
-                        p.setVelY(-p.getVelY());
-                    }
-                    p.moveX();
-                    p.moveY();
+    public void nextDay() {
+        ++giorni;
+        collisionChecker.incontriGiornata = V * P;
+        for (int i = 0; i < listaPopolazione.size(); i++) {
+            int rand = ThreadLocalRandom.current().nextInt(1,100);
+            int rand1 = ThreadLocalRandom.current().nextInt(1,100);
+            Persona p = listaPopolazione.get(i);
+
+            if (p.getVelX() == 0 && p.getVelY() == 0) {
+                this.R -= 1;
+            }
+
+            if (p.isInfected()){
+                p.giorniTrascorsi++;
+                if (p.giorniTrascorsi >= D/6 && p.colore != Color.RED) {
+                    p.colore = Color.ORANGE;
+                    p.setContagioso(true);
+                }
+                if (p.giorniTrascorsi >= D) {
+                    p.setInfection(false);
+                    p.setContagioso(false);
+                    p.colore = Color.BLUE;
+                }
+                if (p.colore == Color.RED && rand1 <= L) {
+                    p.setInfection(false);
+                    p.setContagioso(false);
+                    p.colore = Color.BLACK;
+                    p.setVelX(0);
+                    p.setVelY(0);
+                }
+                if (p.giorniTrascorsi >= D/3 && rand <= S) {
+                    R = R - 3*C;
+                    p.colore = Color.RED;
+                    p.setVelX(0);
+                    p.setVelY(0);
                 }
             }
-            repaint();
+
+            p.maxIncontri = V;
+            if (p.colore != Color.RED && p.colore != Color.BLACK)
+                p.randomizeStatus();
         }
+        System.out.println(this.R);
+    }
+
+    public Timer timer = new Timer(30, e -> {
+
+        if (collisionChecker.incontriGiornata <= 0) {
+            nextDay();
+        }
+
+        for (int i = 0; i < listaPopolazione.size(); i++) {
+            Persona p = listaPopolazione.get(i);
+            if (p!= null) {
+                if (p.getX() + p.getSize() >= borderX) {
+                    p.setVelX(-p.getVelX());
+                }
+                if (p.getX() <= 0) {
+                    p.setVelX(-p.getVelX());
+                }
+                if (p.getY() + p.getSize() >= borderY) {
+                    p.setVelY(-p.getVelY());
+                }
+                if (p.getY() <= 0) {
+                    p.setVelY(-p.getVelY());
+                }
+                p.moveX();
+                p.moveY();
+            }
+        }
+
+        if (R <= 0) {
+            System.out.println("PORCODDIO");
+        }
+
+        repaint();
     });
 
     public void generaPopolazione() {
-        for (int i = 0; i < numeroPopolazione; i++) {
+        for (int i = 0; i < P; i++) {
             int x = ThreadLocalRandom.current().nextInt(0, borderX);
             int y = ThreadLocalRandom.current().nextInt(0, borderY);
 
             if (i!=0) {
-                for (int j = 0; j < listaPopolazione.size(); j++) {
+                for (int j = 1; j < listaPopolazione.size(); j++) {
                     Persona p = listaPopolazione.get(j);
-                    if (p.distance(x, y) - (p.getSize()/2)*2 < 0 && x <= 1 || x >= borderX-10 || y <= 1 || y >= borderY-10) {
+                    if (p.distance(x, y) - (p.getSize() / 2) * 2 < 0 && x <= 10 || x >= borderX - 10 || y <= 10 || y >= borderY - 10) {
                         x = ThreadLocalRandom.current().nextInt(0, borderX);
                         y = ThreadLocalRandom.current().nextInt(0, borderX);
                     }
                 }
             }
-            listaPopolazione.add(new Persona(x, y));
+            listaPopolazione.add(new Persona(x, y, V));
+        }
+        if (listaPopolazione.size() > 0) {
+            listaPopolazione.get(0).colore = Color.ORANGE;
+            listaPopolazione.get(0).setInfection(true);
+            listaPopolazione.get(0).setContagioso(true);
         }
     }
 
-
     // Stampa le particelle a schermo
     public void paintComponent(Graphics g) { // Stampa le particelle a schermo
-        g.setColor(new Color(152, 203, 190));
+        g.setColor(new Color(59, 68, 76));
         g.fillRect(0, 0, borderX, borderY);
         for (int i = 0; i < listaPopolazione.size(); i++) {
             Persona p = listaPopolazione.get(i);
@@ -83,31 +140,4 @@ public class Simulatore extends JPanel {
             g.fillOval(p.getX(), p.getY(), p.getSize(), p.getSize());
         }
     }
-
-    class CollisionChecker extends Thread {
-        long cont;
-
-        @Override
-        public synchronized void run() {
-            while (true) {
-                for (int i = 0; i< listaPopolazione.size(); i++) {
-                    Persona p = listaPopolazione.get(i);
-                    for (int y = 0; y < listaPopolazione.size(); y++) {
-                        Persona s = listaPopolazione.get(y);
-                        if (p != s && p.colore != Color.BLACK && s.colore != Color.BLACK) {
-                            if (p.collideWith(s)) {
-                                listaPopolazione.remove(s);
-                                s.colore = Color.BLACK;
-                                quarantena.putToQuarantine(s);
-                                System.out.println(cont++);
-                                while (p.collideWith(s))
-                                    ;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
 }

@@ -9,7 +9,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Quarantena extends JPanel {
 
     ArrayList<Persona> quarantena = new ArrayList<Persona>();
-
     public Quarantena() {
         setPreferredSize(new Dimension(400,400));
         setBorder(new LineBorder(Color.BLACK));
@@ -52,10 +51,13 @@ public class Quarantena extends JPanel {
     }
 
     public void putToQuarantine(Persona s) {
-        s.setX(ThreadLocalRandom.current().nextInt(220, 380));
-        s.setY(ThreadLocalRandom.current().nextInt(220, 380));
+        s.setX(200);
+        s.setY(200);
+        s.setX(ThreadLocalRandom.current().nextInt(10, 380));
+        s.setY(ThreadLocalRandom.current().nextInt(10, 380));
         s.setVelX(ThreadLocalRandom.current().nextInt(-2,2));
         s.setVelY(ThreadLocalRandom.current().nextInt(-2,2));
         quarantena.add(s);
+        repaint();
     }
 }

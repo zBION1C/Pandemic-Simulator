@@ -1,31 +1,43 @@
+import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Persona {
-    private int y;
-    private int x;
-    private int velX = ThreadLocalRandom.current().nextInt(-3, 3);
-    private int velY = ThreadLocalRandom.current().nextInt(-3, 3);;
-    static final private int size = 4;
-    static final private int radius = size/2;
-    public Color colore = Color.RED;
-    int maxCollisioni;
+public class Persona extends Thread {
+    private int y; private int x; private int velX; private int velY; private int size = 4; private int radius = size / 2;
+    public Color colore = Color.GREEN;
+    public int maxIncontri;
+    public int giorniTrascorsi;
+    private boolean infected = false;
+    private boolean contagioso = false;
+    boolean colliding = false;
+    Persona last;
 
-
-    public Persona (int x, int y) {
+    public Persona(int x, int y, int V) {
+        initStatus();
         this.x = x;
         this.y = y;
+        this.maxIncontri = V;
     }
 
-    public int getX () { return this.x; }
+    public int getX() {
+        return this.x;
+    }
 
-    public int getY() { return this.y; }
+    public int getY() {
+        return this.y;
+    }
 
-    public int getSize() { return this.size; }
+    public int getSize() {
+        return this.size;
+    }
 
-    public int getVelX() { return this.velX; }
+    public int getVelX() {
+        return this.velX;
+    }
 
-    public int getVelY() {return this.velY; }
+    public int getVelY() {
+        return this.velY;
+    }
 
     public void setVelX(int valore) {
         this.velX = valore;
@@ -46,15 +58,19 @@ public class Persona {
     public double distance(int x1, int y1) {
         int xDistance = this.x - x1;
         int yDistance = this.y - y1;
-        return Math.sqrt((xDistance*xDistance)+(yDistance*yDistance));
+        return Math.sqrt((xDistance * xDistance) + (yDistance * yDistance));
+
     }
 
     public boolean collideWith(Persona s) {
-        if (this.distance(s.getX(), s.getY()) - (this.getSize()/2)*2 < 0) {
+        double distance = this.distance(s.getX(), s.getY()) - ((this.getSize() / 2) * 2);
+        if (distance <= 0) {
             return true;
         }
         return false;
     }
+
+    public boolean isColliding() { return colliding; }
 
     public void moveX() {
         this.x += this.velX;
@@ -63,5 +79,25 @@ public class Persona {
     public void moveY() {
         this.y += this.velY;
     }
+
+    public void randomizeStatus() {
+        this.velX = ThreadLocalRandom.current().nextInt(-2, 3);
+        this.velY = ThreadLocalRandom.current().nextInt(-2, 3);
+    }
+
+    public void initStatus() {
+        while (this.velX == 0 || this.velY == 0) {
+            this.velX = ThreadLocalRandom.current().nextInt(-2, 3);
+            this.velY = ThreadLocalRandom.current().nextInt(-2, 3);
+        }
+    }
+
+    public void setInfection(boolean valore) { this.infected = valore; }
+
+    public boolean isInfected() { return infected; }
+
+    public boolean isContagioso() { return this.contagioso; }
+
+    public void setContagioso(boolean valore) { this.contagioso = valore; }
 
 }
