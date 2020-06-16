@@ -7,31 +7,29 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Simulatore extends JPanel {
     static double P, R, C, I, S, L, D;
     static int V;
-    int borderX;
-    int borderY;
-    public ArrayList<Persona> listaPopolazione = new ArrayList<Persona>();
+    static int borderX;
+    static int borderY;
+    static public ArrayList<Persona> listaPopolazione = new ArrayList<Persona>();
     public CollisionChecker collisionChecker;
     Quarantena quarantena;
     int giorni;
-    Tampone tampone;
+    static boolean tracciamento = false;
 
     public Simulatore(double P, double R, double C, int V, double I, double S, double L, double D, int borderX, int borderY, Quarantena quarantena) {
         this.borderX = borderX;
         this.borderY = borderY;
-        this.quarantena = quarantena;
-        this.tampone = new Tampone(C);
         setPreferredSize(new Dimension(borderX,borderY));
         setBorder(new LineBorder(Color.BLACK));
-        collisionChecker = new CollisionChecker(listaPopolazione, I, V, P);
+        collisionChecker = new CollisionChecker(listaPopolazione, I, V, P, quarantena);
         timer.start();
         this.P = P; this.R = R; this.C = C; this.V = V; this.I = I; this.S = S; this.L = L; this.D = D;
         generaPopolazione();
         collisionChecker.start();
+        this.quarantena = quarantena;
     }
 
     public void nextDay() {
         ++giorni;
-        collisionChecker.incontriGiornata = V * P;
         for (int i = 0; i < listaPopolazione.size(); i++) {
             int rand = ThreadLocalRandom.current().nextInt(1,100);
             int rand1 = ThreadLocalRandom.current().nextInt(1,100);
@@ -60,8 +58,16 @@ public class Simulatore extends JPanel {
                     p.setVelY(0);
                 }
                 if (p.giorniTrascorsi >= D/3 && rand <= S) {
-                    R = R - 3*C;
+                    R = R - 3 * C;
                     p.colore = Color.RED;
+                    if (p.tracker.getArrayIncontri().size() > 0)
+                        for (Persona s : p.tracker.getArrayIncontri()) {
+                            if (s.tampone()) {
+                                quarantena.putToQuarantine(s);
+                                collisionChecker.incontriGiornata -= V;
+                            }
+                        }
+                    tracciamento = true;
                     p.setVelX(0);
                     p.setVelY(0);
                 }
@@ -69,7 +75,8 @@ public class Simulatore extends JPanel {
 
             p.maxIncontri = V;
             if (p.colore != Color.RED && p.colore != Color.BLACK)
-                p.randomizeStatus();
+                if (p.getX() > 10 && p.getX() + p.getSize() < borderX-10 && p.getX() > 10 && p.getY()+p.getSize() < borderY-10)
+                    p.randomizeStatus();
         }
         System.out.println(this.R);
     }
@@ -77,6 +84,7 @@ public class Simulatore extends JPanel {
     public Timer timer = new Timer(30, e -> {
 
         if (collisionChecker.incontriGiornata <= 0) {
+            collisionChecker.incontriGiornata = V * listaPopolazione.size();
             nextDay();
         }
 
@@ -101,7 +109,7 @@ public class Simulatore extends JPanel {
         }
 
         if (R <= 0) {
-            System.out.println("PORCODDIO");
+            //risorse finite, che si fa?
         }
 
         repaint();
@@ -115,7 +123,7 @@ public class Simulatore extends JPanel {
             if (i!=0) {
                 for (int j = 1; j < listaPopolazione.size(); j++) {
                     Persona p = listaPopolazione.get(j);
-                    if (p.distance(x, y) - (p.getSize() / 2) * 2 < 0 && x <= 10 || x >= borderX - 10 || y <= 10 || y >= borderY - 10) {
+                    if (p.distance(x, y) - (p.getSize() / 2) * 2 < 0 || x <= 10 || x >= borderX - 10 || y <= 10 || y >= borderY - 10) {
                         x = ThreadLocalRandom.current().nextInt(0, borderX);
                         y = ThreadLocalRandom.current().nextInt(0, borderX);
                     }

@@ -45,7 +45,7 @@ public class Quarantena extends JPanel {
         g.fillRect(0, 0, 400, 400);
         for (int i = 0; i<quarantena.size(); i++) {
             Persona p = quarantena.get(i);
-            g.setColor(Color.BLACK);
+            g.setColor(p.colore);
             g.fillOval(p.getX(), p.getY(), p.getSize(), p.getSize());
         }
     }
@@ -57,6 +57,7 @@ public class Quarantena extends JPanel {
         s.setY(ThreadLocalRandom.current().nextInt(10, 380));
         s.setVelX(ThreadLocalRandom.current().nextInt(-2,2));
         s.setVelY(ThreadLocalRandom.current().nextInt(-2,2));
+        Simulatore.listaPopolazione.remove(s);
         quarantena.add(s);
         repaint();
     }

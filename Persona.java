@@ -1,9 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Persona extends Thread {
-    private int y; private int x; private int velX; private int velY; private int size = 4; private int radius = size / 2;
+    private int y; private int x; private int velX; private int velY; int size = 4; private int radius = size / 2;
     public Color colore = Color.GREEN;
     public int maxIncontri;
     public int giorniTrascorsi;
@@ -11,6 +12,7 @@ public class Persona extends Thread {
     private boolean contagioso = false;
     boolean colliding = false;
     Persona last;
+    Tracker tracker = new Tracker();
 
     public Persona(int x, int y, int V) {
         initStatus();
@@ -99,5 +101,10 @@ public class Persona extends Thread {
     public boolean isContagioso() { return this.contagioso; }
 
     public void setContagioso(boolean valore) { this.contagioso = valore; }
+
+    public boolean tampone () {
+        Simulatore.R = Simulatore.R - Simulatore.C;
+        return contagioso;
+    }
 
 }
