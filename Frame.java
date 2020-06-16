@@ -7,8 +7,8 @@ public class Frame extends JFrame {
 
     private final int frameborderX = 1920;
     private final int frameborderY = 1000;
-    private final int borderX = 1200;
-    private final int borderY = 1015;
+    private final int borderX = 1250;
+    private final int borderY = 1035;
 
     public Frame(double P, double R, double C, int V, double I, double S, double L, double D) {
         setSize(frameborderX,frameborderY);
