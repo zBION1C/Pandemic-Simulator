@@ -20,7 +20,7 @@ public class Simulatore extends JPanel {
         this.borderY = borderY;
         setPreferredSize(new Dimension(borderX,borderY));
         setBorder(new LineBorder(Color.BLACK));
-        collisionChecker = new CollisionChecker(listaPopolazione, I, V, P, quarantena);
+        collisionChecker = new CollisionChecker(listaPopolazione, I, V, P);
         timer.start();
         this.P = P; this.R = R; this.C = C; this.V = V; this.I = I; this.S = S; this.L = L; this.D = D;
         generaPopolazione();
@@ -30,6 +30,7 @@ public class Simulatore extends JPanel {
 
     public void nextDay() {
         ++giorni;
+        collisionChecker.incontriGiornata = V * P;
         for (int i = 0; i < listaPopolazione.size(); i++) {
             int rand = ThreadLocalRandom.current().nextInt(1,100);
             int rand1 = ThreadLocalRandom.current().nextInt(1,100);
@@ -63,10 +64,10 @@ public class Simulatore extends JPanel {
                     if (p.tracker.getArrayIncontri().size() > 0)
                         for (Persona s : p.tracker.getArrayIncontri()) {
                             if (s.tampone()) {
-                                quarantena.putToQuarantine(s);
-                                collisionChecker.incontriGiornata -= V;
+                                //quarantena.putToQuarantine(s);
                             }
                         }
+                    //quarantena.putToQuarantine(p);
                     tracciamento = true;
                     p.setVelX(0);
                     p.setVelY(0);
@@ -78,13 +79,14 @@ public class Simulatore extends JPanel {
                 if (p.getX() > 10 && p.getX() + p.getSize() < borderX-10 && p.getX() > 10 && p.getY()+p.getSize() < borderY-10)
                     p.randomizeStatus();
         }
-        System.out.println(this.R);
+
+        System.out.println(collisionChecker.incontriGiornata);
+        System.out.println("Risorse: " + this.R);
     }
 
     public Timer timer = new Timer(30, e -> {
 
         if (collisionChecker.incontriGiornata <= 0) {
-            collisionChecker.incontriGiornata = V * listaPopolazione.size();
             nextDay();
         }
 

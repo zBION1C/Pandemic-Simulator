@@ -16,7 +16,7 @@ public class Quarantena extends JPanel {
         timer.start();
     }
 
-    public Timer timer = new Timer(40, new ActionListener() {
+    public Timer timer = new Timer(35, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             for (int i = 0; i< quarantena.size(); i++) {
@@ -41,7 +41,7 @@ public class Quarantena extends JPanel {
     });
 
     public void paintComponent(Graphics g) { // Stampa le particelle a schermo
-        g.setColor(new Color(255, 174, 108));
+        g.setColor(new Color(71, 46, 46));
         g.fillRect(0, 0, 400, 400);
         for (int i = 0; i<quarantena.size(); i++) {
             Persona p = quarantena.get(i);

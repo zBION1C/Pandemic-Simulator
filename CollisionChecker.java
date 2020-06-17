@@ -7,13 +7,11 @@ class CollisionChecker extends Thread {
     ArrayList<Persona> listaPopolazione = new ArrayList<Persona>();
     double I;
     double incontriGiornata;
-    Quarantena quarantena;
 
-    public CollisionChecker(ArrayList<Persona> l, double i, double V, double P, Quarantena quarantena) {
+    public CollisionChecker(ArrayList<Persona> l, double i, double V, double P) {
         this.listaPopolazione = l;
         this.I = i;
-        incontriGiornata = V * P;
-        this.quarantena = quarantena;
+        this.incontriGiornata = V * P;
     }
 
     public int getRandom() {
@@ -41,7 +39,7 @@ class CollisionChecker extends Thread {
                         }
 
                         if (p.collideWith(s) && !p.isColliding()) {
-                            System.out.println(incontriGiornata);
+                            //System.out.println(incontriGiornata);
                             p.colliding = true;
                             p.last = s;
                             p.maxIncontri--;
