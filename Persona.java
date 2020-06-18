@@ -82,6 +82,11 @@ public class Persona extends Thread {
         this.y += this.velY;
     }
 
+    public boolean fermo() {
+        if (this.velX == 0 && this.velY == 0) return true;
+        else return false;
+    }
+
     public void randomizeStatus() {
         this.velX = ThreadLocalRandom.current().nextInt(-2, 3);
         this.velY = ThreadLocalRandom.current().nextInt(-2, 3);
@@ -106,5 +111,4 @@ public class Persona extends Thread {
         Simulatore.R = Simulatore.R - Simulatore.C;
         return contagioso;
     }
-
 }

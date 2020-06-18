@@ -5,44 +5,74 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Simulatore extends JPanel {
-    static double P, R, C, I, S, L, D;
+    static double R, C, I, S, L, D;
+    static int P;
+    static int Pd;
     static int V;
+    static int Vd;
+    static double R0;
     static int borderX;
     static int borderY;
+    static int sani; static int malati; static int guariti; static int morti;
     static public ArrayList<Persona> listaPopolazione = new ArrayList<Persona>();
     public CollisionChecker collisionChecker;
     Quarantena quarantena;
     int giorni;
-    static boolean tracciamento = false;
+    static boolean tracciamentoStarted = false;
+    private boolean strategiaTracciamento = false;
+    private boolean strategiaCampione = false;
+    int dinP;
 
-    public Simulatore(double P, double R, double C, int V, double I, double S, double L, double D, int borderX, int borderY, Quarantena quarantena) {
+    public Simulatore(int P, double R, double C, int V, double I, double S, double L, double D, int borderX, int borderY, Quarantena quarantena) {
         this.borderX = borderX;
         this.borderY = borderY;
         setPreferredSize(new Dimension(borderX,borderY));
         setBorder(new LineBorder(Color.BLACK));
         collisionChecker = new CollisionChecker(listaPopolazione, I, V, P);
         timer.start();
-        this.P = P; this.R = R; this.C = C; this.V = V; this.I = I; this.S = S; this.L = L; this.D = D;
+        this.P = P; this.Pd = P; this.R = R; this.C = C; this.V = V; this.Vd = V; this.I = I; this.S = S; this.L = L; this.D = D;
         generaPopolazione();
         collisionChecker.start();
         this.quarantena = quarantena;
     }
 
     public void nextDay() {
+
+        dinP = listaPopolazione.size();
+
+        try {
+            collisionChecker.sleep(1000);
+        } catch (InterruptedException interruptedException) {}
+
         ++giorni;
-        collisionChecker.incontriGiornata = V * P;
+        Pd = P;
+        sani = 0; malati = 0; guariti = 0; morti = 0;
+        for (int j = 0; j < listaPopolazione.size(); j++) {
+            Persona p = listaPopolazione.get(j);
+            if (p.fermo()) Pd--;
+        }
+
+        Vd = (V * Pd)/P;
+        collisionChecker.incontriGiornata = Vd * P;
+
+        R0 = Vd * D * I;
+        if (R0 < 1) {
+            this.timer.stop();
+            System.out.println("Simulazione terminata");
+        }
+
         for (int i = 0; i < listaPopolazione.size(); i++) {
             int rand = ThreadLocalRandom.current().nextInt(1,100);
             int rand1 = ThreadLocalRandom.current().nextInt(1,100);
             Persona p = listaPopolazione.get(i);
+            p.maxIncontri = Vd;
 
             if (p.getVelX() == 0 && p.getVelY() == 0) {
                 this.R -= 1;
             }
-
             if (p.isInfected()){
                 p.giorniTrascorsi++;
-                if (p.giorniTrascorsi >= D/6 && p.colore != Color.RED) {
+                if (p.giorniTrascorsi >= D/6 && p.colore == Color.GREEN) {
                     p.colore = Color.ORANGE;
                     p.setContagioso(true);
                 }
@@ -58,34 +88,59 @@ public class Simulatore extends JPanel {
                     p.setVelX(0);
                     p.setVelY(0);
                 }
-                if (p.giorniTrascorsi >= D/3 && rand <= S) {
+                if (p.giorniTrascorsi >= D/3 && rand <= S && p.colore == Color.ORANGE) {
                     R = R - 3 * C;
                     p.colore = Color.RED;
-                    if (p.tracker.getArrayIncontri().size() > 0)
-                        for (Persona s : p.tracker.getArrayIncontri()) {
-                            if (s.tampone()) {
-                                //quarantena.putToQuarantine(s);
+                    if (strategiaTracciamento) {
+                        if (p.tracker.getArrayIncontri().size() > 0)
+                            for (Persona s : p.tracker.getArrayIncontri()) {
+                                if (s.tampone()) {
+                                    quarantena.putToQuarantine(s);
+                                }
+                            }
+                        quarantena.putToQuarantine(p);
+                        Simulatore.tracciamentoStarted = true;
+                    }
+                    if (strategiaCampione) {
+                        for (int y = 0; i < listaPopolazione.size() / 100; i++){
+                            int indice = ThreadLocalRandom.current().nextInt(0, listaPopolazione.size());
+                            Persona t = listaPopolazione.get(indice);
+                            if (t.tampone()) {
+                                quarantena.putToQuarantine(t);
                             }
                         }
-                    //quarantena.putToQuarantine(p);
-                    tracciamento = true;
+                    }
                     p.setVelX(0);
                     p.setVelY(0);
                 }
             }
-
-            p.maxIncontri = V;
             if (p.colore != Color.RED && p.colore != Color.BLACK)
                 if (p.getX() > 10 && p.getX() + p.getSize() < borderX-10 && p.getX() > 10 && p.getY()+p.getSize() < borderY-10)
                     p.randomizeStatus();
         }
 
-        System.out.println(collisionChecker.incontriGiornata);
-        System.out.println("Risorse: " + this.R);
+
+        for (int j = 0; j < listaPopolazione.size(); j++) {
+            Persona p = listaPopolazione.get(j);
+            if (!p.isInfected()) sani++;
+            else malati++;
+            if (p.colore == Color.BLUE) guariti++;
+            if (p.colore == Color.BLACK) morti++;
+        }
+
+        System.out.println("GIORNO: " + giorni);
+        System.out.println("Incontri da fare: " + collisionChecker.incontriGiornata);
+        System.out.println("Pd: " + this.Pd);
+        System.out.println("Vd: " + this.Vd);
+        System.out.println("Sani: " + sani + " || " + "Guariti: " + guariti);
+        System.out.println("Malati: " + malati + " || " + "Morti: " + morti);
+        System.out.println("Quarantena: " + quarantena.quarantena.size());
+        System.out.println("Risorse: " + this.R + " || " + "Numero Persone in campo:" + listaPopolazione.size());
+
+        System.out.println("----------------------------------------");
     }
 
     public Timer timer = new Timer(30, e -> {
-
         if (collisionChecker.incontriGiornata <= 0) {
             nextDay();
         }
@@ -111,7 +166,8 @@ public class Simulatore extends JPanel {
         }
 
         if (R <= 0) {
-            //risorse finite, che si fa?
+            //this.timer.stop();
+            System.out.println("Risorse finite, simulazione terminata");
         }
 
         repaint();

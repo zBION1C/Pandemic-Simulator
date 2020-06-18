@@ -29,10 +29,12 @@ class CollisionChecker extends Thread {
                     if (p != s && p.maxIncontri > 0) {
 
                         if (p.last!=null) {
-                            if (p.collideWith(p.last) && p.colliding && p.maxIncontri > 0) {
+                            if (p.collideWith(p.last) && p.colliding) {
+                                if (p.getVelX() == p.last.getVelX() && p.getVelY() == p.last.getVelY()){
+                                    p.maxIncontri--;
+                                    incontriGiornata--;
+                                }
                                 p.colliding = true;
-                                p.maxIncontri--;
-                                incontriGiornata--;
                             } else {
                                 p.colliding = false;
                             }
@@ -44,13 +46,13 @@ class CollisionChecker extends Thread {
                             p.last = s;
                             p.maxIncontri--;
                             incontriGiornata--;
-                            if (Simulatore.tracciamento)
+                            if (Simulatore.tracciamentoStarted)
                                 p.tracker.add(s);
                                 s.tracker.add(p);
 
                             int rand = getRandom();
                             if (rand <= I && p.isContagioso() || s.isContagioso()) {
-                                if (p.colore != Color.BLUE && s.colore != Color.BLUE) {
+                                if (p.colore != Color.BLUE && s.colore != Color.BLUE && p.colore != Color.BLACK && s.colore != Color.BLACK) {
                                     s.setInfection(true);
                                     p.setInfection(true);
                                 }
