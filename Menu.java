@@ -71,7 +71,7 @@ public class Menu extends JFrame {
             try { n8 = Double.parseDouble(d.getText()); d.setBorder(new LineBorder(Color.GRAY)); b8 = true;
             } catch (NumberFormatException f) {d.setBorder(new LineBorder(Color.RED)); b8 = false;}
 
-            /*if (n4 == 0) {
+            if (n4 == 0) {
                 v.setBorder(new LineBorder(Color.RED)); b4 = false;
             } else {
                 v.setBorder(new LineBorder(Color.GRAY)); b4 = true;
@@ -97,7 +97,7 @@ public class Menu extends JFrame {
                 p.setBorder(new LineBorder(Color.GRAY)); b1 = true;
                 r.setBorder(new LineBorder(Color.GRAY)); b2 = true;
                 d.setBorder(new LineBorder(Color.GRAY)); b8 = true;
-            }*/
+            }
 
             if (b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8) {
                 new Frame(n1, n2, n3, n4, n5, n6, n7, n8);

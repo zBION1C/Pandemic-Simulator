@@ -51,14 +51,16 @@ public class Quarantena extends JPanel {
     }
 
     public void putToQuarantine(Persona s) {
-        s.setX(200);
-        s.setY(200);
-        s.setX(ThreadLocalRandom.current().nextInt(10, 380));
-        s.setY(ThreadLocalRandom.current().nextInt(10, 380));
-        s.setVelX(ThreadLocalRandom.current().nextInt(-2,2));
-        s.setVelY(ThreadLocalRandom.current().nextInt(-2,2));
-        Simulatore.listaPopolazione.remove(s);
-        quarantena.add(s);
-        repaint();
+        if (!quarantena.contains(s)) {
+            s.setX(200);
+            s.setY(200);
+            s.setX(ThreadLocalRandom.current().nextInt(10, 380));
+            s.setY(ThreadLocalRandom.current().nextInt(10, 380));
+            s.setVelX(ThreadLocalRandom.current().nextInt(-2, 2));
+            s.setVelY(ThreadLocalRandom.current().nextInt(-2, 2));
+            Simulatore.listaPopolazione.remove(s);
+            quarantena.add(s);
+            repaint();
+        }
     }
 }
