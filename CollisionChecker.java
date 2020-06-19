@@ -7,6 +7,7 @@ class CollisionChecker extends Thread {
     ArrayList<Persona> listaPopolazione = new ArrayList<Persona>();
     double I;
     double incontriGiornata;
+    boolean collisionEnabled = true;
 
     public CollisionChecker(ArrayList<Persona> l, double i, double V, double P) {
         this.listaPopolazione = l;
@@ -26,13 +27,15 @@ class CollisionChecker extends Thread {
                 Persona p = listaPopolazione.get(i);
                 for (int y = 0; y < listaPopolazione.size(); y++) {
                     Persona s = listaPopolazione.get(y);
-                    if (p != s && p.maxIncontri > 0) {
+                    if (p != s && p.maxIncontri > 0 && collisionEnabled) {
 
                         if (p.last!=null) {
-                            if (p.collideWith(p.last) && p.colliding && p.maxIncontri > 0) {
+                            if (p.collideWith(p.last) && p.colliding) {
+                                if (p.getVelX() == p.last.getVelX() && p.getVelY() == p.last.getVelY()){
+                                    p.maxIncontri--;
+                                    incontriGiornata--;
+                                }
                                 p.colliding = true;
-                                p.maxIncontri--;
-                                incontriGiornata--;
                             } else {
                                 p.colliding = false;
                             }
@@ -44,10 +47,10 @@ class CollisionChecker extends Thread {
                             p.last = s;
                             p.maxIncontri--;
                             incontriGiornata--;
-                            if (Simulatore.tracciamentoStarted)
+                            if (Simulatore.tracciamentoStarted) {
                                 p.tracker.add(s);
                                 s.tracker.add(p);
-
+                            }
                             int rand = getRandom();
                             if (rand <= I && p.isContagioso() || s.isContagioso()) {
                                 if (p.colore != Color.BLUE && s.colore != Color.BLUE && p.colore != Color.BLACK && s.colore != Color.BLACK) {

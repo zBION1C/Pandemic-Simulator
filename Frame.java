@@ -10,7 +10,7 @@ public class Frame extends JFrame {
     private final int borderX = 1250;
     private final int borderY = 1035;
 
-    public Frame(int P, double R, double C, int V, double I, double S, double L, double D) {
+    public Frame(int P, double R, double C, int V, double I, double S, double L, double D, boolean bt, boolean bc) {
         setSize(frameborderX,frameborderY);
         JFrame frame = new JFrame();
 
@@ -18,7 +18,7 @@ public class Frame extends JFrame {
         rightSidePanel.setLayout(new BorderLayout());
         setLayout(new BorderLayout());
         Quarantena quarantena = new Quarantena();
-        Simulatore simulator = new Simulatore(P, R, C, V, I, S, L, D, borderX, borderY, quarantena);
+        Simulatore simulator = new Simulatore(P, R, C, V, I, S, L, D, borderX, borderY, quarantena, bt, bc);
         add(simulator, BorderLayout.CENTER);
         rightSidePanel.add(quarantena, BorderLayout.NORTH);
         add(rightSidePanel, BorderLayout.EAST);

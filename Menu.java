@@ -10,14 +10,17 @@ public class Menu extends JFrame {
         setTitle("Simulatore");
         setTitle("Menu Parametri Simulazione");
         setSize(500, 500);
+
         //creo il mainPanel
         JPanel mainPanel = new JPanel(new BorderLayout());
         setContentPane(mainPanel);
+
         //aggiungo il pulsante di start sotto
         JPanel buttonPanel = new JPanel();                        // pannello del bottone
         JButton start = new JButton("Start Simulation");     // bottone
         buttonPanel.add(start);                                   // aggiungo bottone al pannello del bottone
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);           // metto il pannelo a sud nel mainPanel
+
         JPanel textPanel = new JPanel();                          // Text Field numero p_panel
         BoxLayout layout = new BoxLayout(textPanel, BoxLayout.Y_AXIS);
         textPanel.setLayout(layout);
@@ -40,12 +43,27 @@ public class Menu extends JFrame {
         textPanel.add(newParameter("Sintomaticitá (S):", s));
         textPanel.add(newParameter("Letalitá (L):", l));
         textPanel.add(newParameter("Durata (D):", d));
+
+        // creo la sezione delle strategie
+        JPanel strategie = new JPanel();
+        BoxLayout layout1 = new BoxLayout(strategie, BoxLayout.Y_AXIS);
+        strategie.setLayout(layout1);
+        strategie.setBorder(new LineBorder(Color.GRAY));
+        strategie.add(new JLabel("  STRATEGIE  POSSIBILI  "));
+        JCheckBox tracciamento = new JCheckBox("Tracciamento");
+        JCheckBox campione = new JCheckBox("Campione");
+        strategie.add(tracciamento);
+        strategie.add(campione);
+
+        mainPanel.add(strategie, BorderLayout.EAST);
         mainPanel.add(parametri, BorderLayout.NORTH);
         mainPanel.add(textPanel, BorderLayout.CENTER);
         buttonPanel.setBackground(Color.WHITE);
         start.addActionListener(e -> {
             int n1=0; double n2=0; double n3=0; int n4=0; double n5=0; double n6=0; double n7=0; double n8=0;
             boolean b1; boolean b2; boolean b3; boolean b4; boolean b5; boolean b6; boolean b7; boolean b8;
+            boolean bt = tracciamento.isSelected();
+            boolean bc = campione.isSelected();
 
             try { n1 = Integer.parseInt(p.getText()); p.setBorder(new LineBorder(Color.GRAY)); b1 = true;
             } catch (NumberFormatException f) {p.setBorder(new LineBorder(Color.RED)); b1 = false;}
@@ -100,7 +118,7 @@ public class Menu extends JFrame {
             }
 
             if (b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8) {
-                new Frame(n1, n2, n3, n4, n5, n6, n7, n8);
+                new Frame(n1, n2, n3, n4, n5, n6, n7, n8, bt, bc);
                 dispose();
             }
         });
