@@ -6,10 +6,9 @@ import java.util.concurrent.ThreadLocalRandom;
 class CollisionChecker extends Thread {
     ArrayList<Persona> listaPopolazione = new ArrayList<Persona>();
     double I;
-    double incontriGiornata;
-    boolean collisionEnabled = true;
+    int incontriGiornata;
 
-    public CollisionChecker(ArrayList<Persona> l, double i, double V, double P) {
+    public CollisionChecker(ArrayList<Persona> l, double i, int V, int P) {
         this.listaPopolazione = l;
         this.I = i;
         this.incontriGiornata = V * P;
@@ -27,7 +26,7 @@ class CollisionChecker extends Thread {
                 Persona p = listaPopolazione.get(i);
                 for (int y = 0; y < listaPopolazione.size(); y++) {
                     Persona s = listaPopolazione.get(y);
-                    if (p != s && p.maxIncontri > 0 && collisionEnabled) {
+                    if (p != s && p.maxIncontri > 0) {
 
                         if (p.last!=null) {
                             if (p.collideWith(p.last) && p.colliding) {
@@ -52,7 +51,7 @@ class CollisionChecker extends Thread {
                                 s.tracker.add(p);
                             }
                             int rand = getRandom();
-                            if (rand <= I && p.isContagioso() || s.isContagioso()) {
+                            if (rand <= I && (p.isContagioso() || s.isContagioso())) {
                                 if (p.colore != Color.BLUE && s.colore != Color.BLUE && p.colore != Color.BLACK && s.colore != Color.BLACK) {
                                     s.setInfection(true);
                                     p.setInfection(true);
