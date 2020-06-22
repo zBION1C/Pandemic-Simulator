@@ -4,7 +4,6 @@ import java.awt.*;
 public class ExitFrame extends JFrame {
 
     public ExitFrame() {
-        JFrame frame = new JFrame();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("ExitFrame");
         setSize(400, 150);

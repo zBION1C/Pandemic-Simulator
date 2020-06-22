@@ -5,7 +5,6 @@ import java.awt.*;
 public class Menu extends JFrame {
     static public int popolazione;
     public Menu() {
-        JFrame menu = new JFrame();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Simulatore");
         setTitle("Menu Parametri Simulazione");
@@ -60,7 +59,7 @@ public class Menu extends JFrame {
         mainPanel.add(textPanel, BorderLayout.CENTER);
         buttonPanel.setBackground(Color.WHITE);
         start.addActionListener(e -> {
-            int n1=0; double n2=0; double n3=0; int n4=0; double n5=0; double n6=0; double n7=0; double n8=0;
+            int n1=0; double n2=0; double n3=0; int n4=0; double n5=0; double n6=0; double n7=0; int n8=0;
             boolean b1; boolean b2; boolean b3; boolean b4; boolean b5; boolean b6; boolean b7; boolean b8;
             boolean bt = tracciamento.isSelected();
             boolean bc = campione.isSelected();
@@ -86,7 +85,7 @@ public class Menu extends JFrame {
             try { n7 = Double.parseDouble(l.getText()); l.setBorder(new LineBorder(Color.GRAY)); b7 = true;
             } catch (NumberFormatException f) {l.setBorder(new LineBorder(Color.RED)); b7 = false;}
 
-            try { n8 = Double.parseDouble(d.getText()); d.setBorder(new LineBorder(Color.GRAY)); b8 = true;
+            try { n8 = Integer.parseInt(d.getText()); d.setBorder(new LineBorder(Color.GRAY)); b8 = true;
             } catch (NumberFormatException f) {d.setBorder(new LineBorder(Color.RED)); b8 = false;}
 
             if (n4 == 0) {

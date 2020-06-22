@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Persona extends Thread {
-    private int y; private int x; private int velX; private int velY; int size = 5; private int radius = size / 2;
+    private int y; private int x; private int velX; private int velY; int size = 4; private int radius = size / 2;
     public Color colore = Color.GREEN;
     public int maxIncontri;
     public int giorniTrascorsi;

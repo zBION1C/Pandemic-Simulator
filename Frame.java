@@ -22,11 +22,20 @@ public class Frame extends JFrame {
     private static JLabel lblquarantena;
     private static JLabel lblcampo;
     private static JLabel lblrisorse;
+    private static JLabel lblR0;
+    private static JLabel lblfermi;
+    private static JLabel lbldurata;
+    private static JLabel lblI;
+    private static JLabel lblS;
+    private static JLabel lblL;
+    private static JLabel lblC;
+    private static JLabel lblseparator;
 
 
-    public Frame(int P, double R, double C, int V, double I, double S, double L, double D, boolean bt, boolean bc) {
+
+
+    public Frame(int P, double R, double C, int V, double I, double S, double L, int D, boolean bt, boolean bc) {
         setSize(frameborderX,frameborderY);
-        JFrame frame = new JFrame();
 
         JPanel rightSidePanel = new JPanel();
         rightSidePanel.setLayout(new BorderLayout());
@@ -34,6 +43,15 @@ public class Frame extends JFrame {
         dati = new JPanel();
         dati.setLayout(new BoxLayout(dati, BoxLayout.Y_AXIS));
         rightSidePanel.add(dati, BorderLayout.CENTER);
+
+        lblI = new JLabel("Infettivita: " + I + "%");
+        lblS = new JLabel("Sintomaticita: " + S+ "%");
+        lblL = new JLabel("Letalita: " + L+ "%");
+        lblC = new JLabel("Costo Tampone: " + C);
+        lbldurata = new JLabel("Durata: " + D + " giorni");
+
+        lblseparator = new JLabel("===========================");
+
         giorno = new JLabel("Giorno: " + 0);
         incontri = new JLabel("Incontri rimasti: " + V*P);
         lblPd = new JLabel("Popolazione in movimento: " +  P);
@@ -46,9 +64,21 @@ public class Frame extends JFrame {
         lblquarantena = new JLabel("Persone in quarantena: " +  0);
         lblcampo = new JLabel("Persone in campo: " +  P);
         lblrisorse = new JLabel("Risorse: " +  R);
+        lblR0 = new JLabel("Fattore R0: " + V * D * (I/100));
+        lblfermi = new JLabel("Popolazione ferma: " + 0);
+
+        dati.add(lblI);
+        dati.add(lblS);
+        dati.add(lblL);
+        dati.add(lblC);
+        dati.add(lbldurata);
+
+        dati.add(lblseparator);
+
         dati.add(giorno);
         dati.add(incontri);
         dati.add(lblPd);
+        dati.add(lblfermi);
         dati.add(lblVd);
         dati.add(lblsani);
         dati.add(lblguariti);
@@ -58,6 +88,8 @@ public class Frame extends JFrame {
         dati.add(lblquarantena);
         dati.add(lblcampo);
         dati.add(lblrisorse);
+        dati.add(lblR0);
+        dati.add(lblfermi);
         Quarantena quarantena = new Quarantena();
         Simulatore simulator = new Simulatore(P, R, C, V, I, S, L, D, borderX, borderY, quarantena, bt, bc);
         add(simulator, BorderLayout.CENTER);
@@ -81,7 +113,7 @@ public class Frame extends JFrame {
         });
     }
 
-    public static void updateData(int g, int incontriRimasti, int Pd, int Vd, int sani, int guariti, int morti, int asintomatici, int sintomatici, int quarantena, double risorse, int campo) {
+    public static void updateData(int g, int incontriRimasti, int Pd, int Vd, int sani, int guariti, int morti, int asintomatici, int sintomatici, int quarantena, double risorse, int campo, double R0, int fermi) {
         giorno.setText("Giorno: " + g);
         incontri.setText("Incontri rimasti: " + incontriRimasti);
         lblPd.setText("Popolazione in movimento: " + Pd);
@@ -91,9 +123,11 @@ public class Frame extends JFrame {
         lblmorti.setText("Morti: " + morti);
         lblasintomatici.setText("Asintomatici: " + asintomatici);
         lblsintomatici.setText("Sintomatici: " + sintomatici);
-        lblquarantena.setText("Persona in quarantena: " + quarantena);
-        lblcampo.setText("Persona in campo: " + campo);
+        lblquarantena.setText("Persone in quarantena: " + quarantena);
+        lblcampo.setText("Persone in campo: " + campo);
         lblrisorse.setText("Risorse: " + risorse);
+        lblR0.setText("Fattore R0: " + R0);
+        lblfermi.setText("Popolazione ferma: " + fermi);
     }
 
 
