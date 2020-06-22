@@ -30,7 +30,8 @@ public class Frame extends JFrame {
     private static JLabel lblL;
     private static JLabel lblC;
     private static JLabel lblseparator;
-
+    private static JLabel lblseparator2;
+    private static JLabel esito;
 
 
 
@@ -67,6 +68,10 @@ public class Frame extends JFrame {
         lblR0 = new JLabel("Fattore R0: " + V * D * (I/100));
         lblfermi = new JLabel("Popolazione ferma: " + 0);
 
+        lblseparator2 = new JLabel("===========================");
+
+        esito = new JLabel("Esito della simulazione: " + "Simulazione ancora in corso...");
+
         dati.add(lblI);
         dati.add(lblS);
         dati.add(lblL);
@@ -85,54 +90,42 @@ public class Frame extends JFrame {
         dati.add(lblmorti);
         dati.add(lblasintomatici);
         dati.add(lblsintomatici);
-        dati.add(lblquarantena);
         dati.add(lblcampo);
+        dati.add(lblquarantena);
         dati.add(lblrisorse);
         dati.add(lblR0);
-        dati.add(lblfermi);
+
+        dati.add(lblseparator2);
+
+        dati.add(esito);
         Quarantena quarantena = new Quarantena();
         Simulatore simulator = new Simulatore(P, R, C, V, I, S, L, D, borderX, borderY, quarantena, bt, bc);
         add(simulator, BorderLayout.CENTER);
         rightSidePanel.add(quarantena, BorderLayout.NORTH);
         add(rightSidePanel, BorderLayout.EAST);
-
-
         setVisible(true);
         setTitle("SIMULAZIONE");
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
-
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                simulator.timer.stop();
-                simulator.listaPopolazione.clear();
-                simulator.collisionChecker.interrupt();
-                exit();
-            }
-        });
     }
 
-    public static void updateData(int g, int incontriRimasti, int Pd, int Vd, int sani, int guariti, int morti, int asintomatici, int sintomatici, int quarantena, double risorse, int campo, double R0, int fermi) {
+    public static void updateData(int g, int incontriRimasti, int Pd, double Vd, int sani, int guariti, int morti, int asintomatici, int sintomatici, int quarantena, double risorse, int campo, double R0, int fermi) {
+        int cont  = 3;
+
         giorno.setText("Giorno: " + g);
         incontri.setText("Incontri rimasti: " + incontriRimasti);
         lblPd.setText("Popolazione in movimento: " + Pd);
+        lblfermi.setText("Popolazione ferma: " + fermi);
         lblVd.setText("Velocita dinamica: " + Vd);
         lblsani.setText("Sani: " + sani);
         lblguariti.setText("Guariti: " + guariti);
         lblmorti.setText("Morti: " + morti);
         lblasintomatici.setText("Asintomatici: " + asintomatici);
         lblsintomatici.setText("Sintomatici: " + sintomatici);
-        lblquarantena.setText("Persone in quarantena: " + quarantena);
         lblcampo.setText("Persone in campo: " + campo);
+        lblquarantena.setText("Persone in quarantena: " + quarantena);
         lblrisorse.setText("Risorse: " + risorse);
         lblR0.setText("Fattore R0: " + R0);
-        lblfermi.setText("Popolazione ferma: " + fermi);
-    }
 
-
-    public void exit () {
-        dispose();
-        new ExitFrame();
     }
 }

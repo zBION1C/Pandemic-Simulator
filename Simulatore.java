@@ -12,7 +12,7 @@ public class Simulatore extends JPanel {
     static int P;
     static int Pd;
     static int V;
-    static int Vd;
+    static double Vd;
     static double R0;
     static int borderX;
     static int borderY;
@@ -49,24 +49,6 @@ public class Simulatore extends JPanel {
         ++giorni;
         Pd = listaPopolazione.size();
         sani = 0; asintomatici = 0; sintomatici = 0; guariti = 0; morti = 0; fermi = 0;
-        for (Persona p: listaPopolazione) {
-            if (p.colore != Color.RED && p.colore != Color.BLACK)
-                if (p.getX() > 10 && p.getX() + p.getSize() < borderX-10 && p.getY() > 10 && p.getY()+p.getSize() < borderY-10)
-                    p.randomizeStatus();
-
-            if (p.fermo() && p.colore != Color.BLACK) {
-                this.R -= 1;
-            }
-
-            if (p.fermo()) {
-                fermi++;
-                Pd -= 1;
-            }
-        }
-
-        Vd = (V/P) * Pd;
-
-        R0 = Vd * D * (I/100);
 
         for (int y = 0; y < quarantena.quarantena.size(); y++) {
             double rand = ThreadLocalRandom.current().nextDouble(1,100);
@@ -84,6 +66,7 @@ public class Simulatore extends JPanel {
                 p.colore = Color.BLACK;
                 p.setVelX(0);
                 p.setVelY(0);
+                P--;
             }
             if (p.giorniTrascorsi >= D/3 && rand <= S && p.colore == Color.ORANGE) {
                 R -= 3 * C;
@@ -117,6 +100,7 @@ public class Simulatore extends JPanel {
                     p.colore = Color.BLACK;
                     p.setVelX(0);
                     p.setVelY(0);
+                    P--;
                 }
                 if (p.giorniTrascorsi >= D/3 && rand <= S && p.colore == Color.ORANGE) {
                     R = R - 3 * C;
@@ -151,10 +135,33 @@ public class Simulatore extends JPanel {
 
         }
 
-        for (Persona persona: listaPopolazione) {
-            collisionChecker.incontriGiornata += persona.maxIncontri;
+        for (Persona p: listaPopolazione) {
+            if (p.colore != Color.RED && p.colore != Color.BLACK)
+                if (p.getX() > 10 && p.getX() + p.getSize() < borderX-10 && p.getY() > 10 && p.getY()+p.getSize() < borderY-10)
+                    p.randomizeStatus();
+
+            if (p.fermo() && p.colore != Color.BLACK) {
+                this.R -= 1;
+            }
+
+            if (p.fermo()) {
+                fermi++;
+                Pd -= 1;
+            }
         }
 
+        System.out.println("V: " + V);
+        Vd = (V/(P * 1.0)) * Pd;
+        System.out.println(Vd);
+        Vd = Math.round(Vd);
+        System.out.println(Vd);
+
+        R0 = Vd * D * (I/100);
+
+        for (Persona persona: listaPopolazione) {
+            persona.maxIncontri = Vd;
+            collisionChecker.incontriGiornata += persona.maxIncontri;
+        }
 
         for (int j = 0; j < listaPopolazione.size(); j++) {
             Persona p = listaPopolazione.get(j);
@@ -179,6 +186,7 @@ public class Simulatore extends JPanel {
         System.out.println("Incontri da fare: " + collisionChecker.incontriGiornata);
         System.out.println("Pd: " + this.Pd);
         System.out.println("Vd: " + this.Vd);
+        System.out.println("P: " + this.P);
         System.out.println("Sani: " + sani + " || " + "Guariti: " + guariti + " || " + "Morti: " + morti);
         System.out.println("Asintomatici: " + asintomatici + " || " + "Sintomatici: " + sintomatici);
         System.out.println("Quarantena: " + quarantena.quarantena.size());
@@ -187,12 +195,12 @@ public class Simulatore extends JPanel {
         System.out.println("---------------------------------------------------------------------");
 
 
-        if (R <= 0) {
+        /*if (R <= 0) {
             this.timer.stop();
             quarantena.timer.stop();
             collisionChecker.interrupt();
             System.out.println("Risorse finite, simulazione terminata");
-        }
+        }*/
         if (R0 < 1) {
             this.timer.stop();
             quarantena.timer.stop();
