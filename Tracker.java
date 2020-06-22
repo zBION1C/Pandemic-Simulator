@@ -11,6 +11,4 @@ public class Tracker {
         return this.incontri;
     }
 
-    public void clear() {this.incontri.clear();}
-
 }
