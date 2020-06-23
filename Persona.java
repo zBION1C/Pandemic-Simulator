@@ -101,11 +101,11 @@ public class Persona extends Thread {
 
     public void setInfection(boolean valore) { this.infected = valore; }
 
+    public void setContagioso(boolean valore) { this.contagioso = valore; }
+
     public boolean isInfected() { return infected; }
 
     public boolean isContagioso() { return this.contagioso; }
-
-    public void setContagioso(boolean valore) { this.contagioso = valore; }
 
     public boolean tampone () {
         Simulatore.R = Simulatore.R - Simulatore.C;

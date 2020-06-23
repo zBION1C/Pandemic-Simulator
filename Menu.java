@@ -26,14 +26,14 @@ public class Menu extends JFrame {
         JPanel parametri = new JPanel();
         parametri.add(new JLabel("PARAMETRI INIZIALI"));
         parametri.setBackground(Color.GRAY);
-        JTextField p = new JTextField("1000", 10);
-        JTextField r = new JTextField("1000", 10);
-        JTextField c = new JTextField("2", 10);
-        JTextField v = new JTextField("2", 10);
-        JTextField i = new JTextField("80", 10);
-        JTextField s = new JTextField("80", 10);
-        JTextField l = new JTextField("80", 10);
-        JTextField d = new JTextField("6", 10);
+        JTextField p = new JTextField("5000", 10);
+        JTextField r = new JTextField("70000", 10);
+        JTextField c = new JTextField("3", 10);
+        JTextField v = new JTextField("3", 10);
+        JTextField i = new JTextField("100", 10);
+        JTextField s = new JTextField("100", 10);
+        JTextField l = new JTextField("100", 10);
+        JTextField d = new JTextField("15", 10);
         textPanel.add(newParameter("Popolazione iniziale (P):", p));
         textPanel.add(newParameter("Risorse iniziali (R):", r));
         textPanel.add(newParameter("Costo delle cure (C):", c));
@@ -51,8 +51,11 @@ public class Menu extends JFrame {
         strategie.add(new JLabel("  STRATEGIE  POSSIBILI  "));
         JCheckBox tracciamento = new JCheckBox("Tracciamento");
         JCheckBox campione = new JCheckBox("Campione");
+        JCheckBox meta = new JCheckBox(("Metá popolazione"));
         strategie.add(tracciamento);
         strategie.add(campione);
+        strategie.add(meta);
+
 
         mainPanel.add(strategie, BorderLayout.EAST);
         mainPanel.add(parametri, BorderLayout.NORTH);
@@ -61,8 +64,14 @@ public class Menu extends JFrame {
         start.addActionListener(e -> {
             int n1=0; double n2=0; double n3=0; int n4=0; double n5=0; double n6=0; double n7=0; int n8=0;
             boolean b1; boolean b2; boolean b3; boolean b4; boolean b5; boolean b6; boolean b7; boolean b8;
+            String strategia = "Nessuna";
             boolean bt = tracciamento.isSelected();
             boolean bc = campione.isSelected();
+            boolean bm = meta.isSelected();
+
+            if (bt) strategia = tracciamento.getText();
+            if (bc) strategia = campione.getText();
+            if (bm) strategia = meta.getText();
 
             try { n1 = Integer.parseInt(p.getText()); p.setBorder(new LineBorder(Color.GRAY)); b1 = true;
             } catch (NumberFormatException f) {p.setBorder(new LineBorder(Color.RED)); b1 = false;}
@@ -117,7 +126,7 @@ public class Menu extends JFrame {
             }
 
             if (b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8) {
-                new Frame(n1, n2, n3, n4, n5, n6, n7, n8, bt, bc);
+                new Frame(n1, n2, n3, n4, n5, n6, n7, n8, bt, bc, bm, strategia);
                 dispose();
             }
         });
