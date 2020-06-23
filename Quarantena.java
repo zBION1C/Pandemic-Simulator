@@ -52,6 +52,8 @@ public class Quarantena extends JPanel {
 
     public void putToQuarantine(Persona s) {
         if (!quarantena.contains(s)) {
+            Simulatore.Pd--;
+            Simulatore.P--;
             s.setX(200);
             s.setY(200);
             s.setX(ThreadLocalRandom.current().nextInt(10, 380));

@@ -51,8 +51,10 @@ public class Menu extends JFrame {
         strategie.add(new JLabel("  STRATEGIE  POSSIBILI  "));
         JCheckBox tracciamento = new JCheckBox("Tracciamento");
         JCheckBox campione = new JCheckBox("Campione");
+        JCheckBox meta = new JCheckBox(("Meta' popolazione"));
         strategie.add(tracciamento);
         strategie.add(campione);
+        strategie.add(meta);
 
         mainPanel.add(strategie, BorderLayout.EAST);
         mainPanel.add(parametri, BorderLayout.NORTH);
@@ -63,6 +65,7 @@ public class Menu extends JFrame {
             boolean b1; boolean b2; boolean b3; boolean b4; boolean b5; boolean b6; boolean b7; boolean b8;
             boolean bt = tracciamento.isSelected();
             boolean bc = campione.isSelected();
+            boolean bm = meta.isSelected();
 
             try { n1 = Integer.parseInt(p.getText()); p.setBorder(new LineBorder(Color.GRAY)); b1 = true;
             } catch (NumberFormatException f) {p.setBorder(new LineBorder(Color.RED)); b1 = false;}
@@ -117,7 +120,7 @@ public class Menu extends JFrame {
             }
 
             if (b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8) {
-                new Frame(n1, n2, n3, n4, n5, n6, n7, n8, bt, bc);
+                new Frame(n1, n2, n3, n4, n5, n6, n7, n8, bt, bc, bm);
                 dispose();
             }
         });

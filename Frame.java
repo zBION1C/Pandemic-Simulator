@@ -31,11 +31,9 @@ public class Frame extends JFrame {
     private static JLabel lblC;
     private static JLabel lblseparator;
     private static JLabel lblseparator2;
-    private static JLabel esito;
+    private static JLabel lblesito;
 
-
-
-    public Frame(int P, double R, double C, int V, double I, double S, double L, int D, boolean bt, boolean bc) {
+    public Frame(int P, double R, double C, int V, double I, double S, double L, int D, boolean bt, boolean bc, boolean bm) {
         setSize(frameborderX,frameborderY);
 
         JPanel rightSidePanel = new JPanel();
@@ -70,7 +68,7 @@ public class Frame extends JFrame {
 
         lblseparator2 = new JLabel("===========================");
 
-        esito = new JLabel("Esito della simulazione: " + "Simulazione ancora in corso...");
+        lblesito = new JLabel("Esito della simulazione: " + "Simulazione ancora in corso...");
 
         dati.add(lblI);
         dati.add(lblS);
@@ -97,9 +95,9 @@ public class Frame extends JFrame {
 
         dati.add(lblseparator2);
 
-        dati.add(esito);
+        dati.add(lblesito);
         Quarantena quarantena = new Quarantena();
-        Simulatore simulator = new Simulatore(P, R, C, V, I, S, L, D, borderX, borderY, quarantena, bt, bc);
+        Simulatore simulator = new Simulatore(P, R, C, V, I, S, L, D, borderX, borderY, quarantena, bt, bc, bm);
         add(simulator, BorderLayout.CENTER);
         rightSidePanel.add(quarantena, BorderLayout.NORTH);
         add(rightSidePanel, BorderLayout.EAST);
@@ -109,9 +107,7 @@ public class Frame extends JFrame {
         pack();
     }
 
-    public static void updateData(int g, int incontriRimasti, int Pd, double Vd, int sani, int guariti, int morti, int asintomatici, int sintomatici, int quarantena, double risorse, int campo, double R0, int fermi) {
-        int cont  = 3;
-
+    public static void updateData(int g, int incontriRimasti, int Pd, double Vd, int sani, int guariti, int morti, int asintomatici, int sintomatici, int quarantena, double risorse, int campo, double R0, int fermi, String esito) {
         giorno.setText("Giorno: " + g);
         incontri.setText("Incontri rimasti: " + incontriRimasti);
         lblPd.setText("Popolazione in movimento: " + Pd);
@@ -126,6 +122,6 @@ public class Frame extends JFrame {
         lblquarantena.setText("Persone in quarantena: " + quarantena);
         lblrisorse.setText("Risorse: " + risorse);
         lblR0.setText("Fattore R0: " + R0);
-
+        lblesito.setText("Esito della simulazione: " + esito);
     }
 }

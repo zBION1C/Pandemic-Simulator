@@ -20,7 +20,6 @@ class CollisionChecker extends Thread {
 
     @Override
     public void run() {
-        long cont = 0;
         while (true) {
             for (int i = 0; i< listaPopolazione.size(); i++) {
                 Persona p = listaPopolazione.get(i);
@@ -41,7 +40,6 @@ class CollisionChecker extends Thread {
                         }
 
                         if (p.collideWith(s) && !p.isColliding()) {
-                            //System.out.println(incontriGiornata);
                             p.colliding = true;
                             p.last = s;
                             p.maxIncontri--;
